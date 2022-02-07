@@ -25,7 +25,7 @@ function Home() {
     {input === 'incomes' && <PieChart title='Incomes'></PieChart>}
     {input === 'expenses' && <PieChart title='Expenses'></PieChart>}
     </div>
-    <Table/>
+    <Table type="Last moves"/>
   </div>;
 }
 

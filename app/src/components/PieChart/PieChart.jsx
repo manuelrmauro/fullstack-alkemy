@@ -53,7 +53,7 @@ function PieChartComp({title}) {
 		>
 			<Series argumentField="country" valueField="area">
 				<Label visible={true}>
-					<Connector visible={true} width={1} />
+					<Connector visible={true} width={0.5} />
 				</Label>
 			</Series>
 
