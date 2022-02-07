@@ -1,3 +1,9 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5em 0.5em 1em 1em;
+}
+
 .navTitle {
-  color: red;
+  font-size: 2em;
 }

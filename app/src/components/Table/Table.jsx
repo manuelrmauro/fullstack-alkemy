@@ -71,10 +71,10 @@ export default function EnhancedTable({ type }) {
 		},
 	];
 
-  if (type === 'Last moves') {
+/*   if (type === 'Last moves') {
     datas.splice(0,10)
   }
-
+ */
 	const rows = datas.map((data) =>
 		createData(
 			data.id,

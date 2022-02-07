@@ -3,9 +3,9 @@ import Menu from '../Menu/Menu'
 import './Nav.css'
 
 function Nav() {
-  return <div>
+  return <div className='nav'>
     <span className='navTitle'>App</span>
-    <Menu/>
+    <Menu className='navMenu'/>
     </div>;
 }
 
