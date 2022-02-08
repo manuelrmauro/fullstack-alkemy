@@ -3,16 +3,15 @@ const ConfigDB = require('../config/database');
 
 const connection = new Sequelize(ConfigDB);
 
-// const CompanyType = require('../models/CompanyType');
+const User = require('../models/User');
  
 
 // Models Init
-
-// CompanyType.init(connection);
+User.init(connection);
 
 
 // Associate
-// Company.associate(connection.models);
+User.associate(connection.models);
 
 
 module.exports = connection;

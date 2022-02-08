@@ -20,7 +20,6 @@ module.exports = (request, response, next) => {
 
     request.userId = uid.id;
     request.userName = uid.name;
-    request.userRoleId = uid.roleId;
 
   } catch (error) {
     return response.status(401).json({
