@@ -1,0 +1,11 @@
+.tableHead {
+  background-color: var(--color-black-hover);
+}
+
+.tableHeadSubtitles {
+  color: var(--color-white) !important;
+}
+
+.tableHeadCheck {
+ color: var(--color-white) !important;
+}

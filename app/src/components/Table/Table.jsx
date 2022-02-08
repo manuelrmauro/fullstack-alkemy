@@ -17,8 +17,8 @@ import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import './Table.css'
 
 export default function EnhancedTable({ type }) {
 	const [order, setOrder] = React.useState('asc');
@@ -71,10 +71,6 @@ export default function EnhancedTable({ type }) {
 		},
 	];
 
-/*   if (type === 'Last moves') {
-    datas.splice(0,10)
-  }
- */
 	const rows = datas.map((data) =>
 		createData(
 			data.id,
@@ -122,27 +118,23 @@ export default function EnhancedTable({ type }) {
 	const headCells = [
 		{
 			id: 'concept',
-			numeric: false,
-			disablePadding: true,
-			label: 'Concept',
+			disablePadding: false,
+			label: 'CONCEPT',
 		},
 		{
 			id: 'category',
-			numeric: true,
 			disablePadding: false,
-			label: 'Category',
+			label: 'CATEGORY',
 		},
 		{
-			id: 'amount',
-			numeric: true,
+			id: 'amount',	
 			disablePadding: false,
-			label: 'Amount',
+			label: 'AMOUNT',
 		},
 		{
 			id: 'date',
-			numeric: true,
 			disablePadding: false,
-			label: 'Date',
+			label: 'DATE',
 		},
 	];
 
@@ -161,22 +153,23 @@ export default function EnhancedTable({ type }) {
 
 		return (
 			<TableHead>
-				<TableRow>
+				<TableRow className='tableHead'>
 					<TableCell padding="checkbox">
 						<Checkbox
+						 className='tableHeadCheck'
 							color="primary"
 							indeterminate={numSelected > 0 && numSelected < rowCount}
 							checked={rowCount > 0 && numSelected === rowCount}
 							onChange={onSelectAllClick}
 							inputProps={{
-								'aria-label': 'select all desserts',
+								'aria-label': 'select all',
 							}}
 						/>
 					</TableCell>
 					{headCells.map((headCell) => (
 						<TableCell
+						className='tableHeadSubtitles'
 							key={headCell.id}
-							align={headCell.numeric ? 'right' : 'left'}
 							padding={headCell.disablePadding ? 'none' : 'normal'}
 							sortDirection={orderBy === headCell.id ? order : false}
 						>
@@ -354,10 +347,10 @@ export default function EnhancedTable({ type }) {
 													}}
 												/>
 											</TableCell>
-											<TableCell align="right">{row.concept}</TableCell>
-											<TableCell align="right">{row.category}</TableCell>
-											<TableCell align="right">{row.amount}</TableCell>
-											<TableCell align="right">{row.date}</TableCell>
+											<TableCell align="left">{row.concept}</TableCell>
+											<TableCell align="left">{row.category}</TableCell>
+											<TableCell align="left">{row.amount}</TableCell>
+											<TableCell align="left">{row.date}</TableCell>
 										</TableRow>
 									);
 								})}
