@@ -23,10 +23,6 @@ class User extends Model {
           allowNull: false,
           defaultValue: 'direct',
         },
-        mailCode: {
-          type: DataTypes.STRING,
-          allowNull: true,
-        },
       },
       {
         sequelize,
@@ -35,7 +31,7 @@ class User extends Model {
   }
 
   static associate(models) {
-    this.belongsTo(models.Role, { foreignKey: 'role_id', as: 'role' });
+    this.hasMany(models.Operation, { foreignKey: 'user_id', as: 'operation' });
 
   }
 }

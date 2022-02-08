@@ -3,3 +3,5 @@ node_modules
 docker-compose.yaml
 
 .env
+
+docker/database/postgres/data

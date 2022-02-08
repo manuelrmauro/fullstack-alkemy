@@ -4,7 +4,8 @@ const cors = require('cors');
 const morgan = require('morgan');
 const connection = require('./database/connection');
 
-const User = require('./models/User');
+const Category = require('./models/Category');
+const {incomeCategories, expenseCategories} = require('./database/data/categories')
 
 
 class Server {
@@ -15,12 +16,15 @@ class Server {
     this.environment = process.env.NODE_ENV;
 
     this.paths = {
-      apiv1: '/api/',
+      apiv1: '/api/v1',
       frontend: '/',
     };
 
     this.middlewares();
     this.routes();
+
+    this.incomeCategories = incomeCategories
+    this.expenseCategories = expenseCategories
   }
 
   getExpressInstance() {
@@ -35,7 +39,6 @@ class Server {
 
   routes() {
     this.app.use(this.paths.apiv1, require('./routes/api'));
-    this.app.use(this.paths.frontend, require('./routes/frontend'));
   }
 
   async connectDb() {
@@ -64,10 +67,28 @@ class Server {
     }
   }
 
+  async seedDb() {
+    try {
+      console.log('||--> Categories seed <--||');
+      this.expenseCategories.forEach(async category => {
+        console.log('>>>>> Seeding category "' + category +'"')
+        await Category.create({name: category, type: 'Expense'})
+      })
+      this.incomeCategories.forEach(async category => {
+        console.log('>>>>> Seeding category "' + category +'"')
+        await Category.create({name: category, type: 'Income'})
+      })
+    } catch (error) {
+      console.log('Could not seed the database...');
+      console.log(error);
+    }
+  }
+
   start() {
     this.app.listen(this.port, async () => {
-      console.log(`||--> Http server running in port:${this.port} <--||`);
       await this.connectDb();
+      await this.seedDb();
+      console.log(`||--> Http server running in port:${this.port} <--||`);
     });
   }
 }
