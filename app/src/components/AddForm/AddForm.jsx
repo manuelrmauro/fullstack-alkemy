@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import Alert from '@mui/material/Alert';
+import './AddForm.css'
+import { useEffect } from 'react';
 
 function AddForm() {
 	//date
@@ -30,6 +32,17 @@ function AddForm() {
 		concept: '',
 		amount: '',
 	});
+
+	const [disabled, setDisabled] = useState(true)
+
+	useEffect(() => {
+		let count = 0
+		Object.keys(errors).forEach(key => {
+			if (errors[key] !== '') count++
+		})
+		if (count === 0) setDisabled(false)
+		else setDisabled(true)
+	},[errors])
 
 	const handleErrors = ( props ) => {
 
@@ -76,17 +89,37 @@ function AddForm() {
 	};
 
 	return (
-		<form onSubmit={handleOnSubmit}>
-			<div>
+		<form onSubmit={handleOnSubmit} className='addForm'>
+			<div className='inputContainer'>
+				<label>Concept</label>
+				<input
+					name="concept"
+					value={input.concept}
+					onChange={handleInputChange}
+				/>
+				{errors.concept && <Alert className='inputAlert' severity="error">{errors.concept}</Alert>}
+			</div>
+			<div className='inputContainer'>
+				<label>Amount</label>
+				<input
+					type="number"
+					name="amount"
+					min="1"
+					value={input.amount}
+					onChange={handleInputChange}
+				/>
+				{errors.amount && <Alert className='inputAlert' severity="error">{errors.amount}</Alert>}
+			</div>
+			<div className='inputContainer'>
 				<label>Type</label>
 				<select name="type" value={input.type} onChange={handleInputChange}>
 					<option value="none"></option>
 					<option value="income">Income</option>
 					<option value="expense">Expense</option>
 				</select>
-				{errors.type && <Alert severity="error">{errors.type}</Alert>}
+				{errors.type && <Alert className='inputAlert' severity="error">{errors.type}</Alert>}
 			</div>
-			<div>
+			<div className='inputContainer'>
 				<label>Category</label>
 				<select
 					name="category"
@@ -96,29 +129,9 @@ function AddForm() {
 					<option value="none"></option>
 					<option value="all">All</option>
 				</select>
-				{errors.category && <Alert severity="error">{errors.category}</Alert>}
+				{errors.category && <Alert className='inputAlert' severity="error">{errors.category}</Alert>}
 			</div>
-			<div>
-				<label>Concept</label>
-				<input
-					name="concept"
-					value={input.concept}
-					onChange={handleInputChange}
-				/>
-				{errors.concept && <Alert severity="error">{errors.concept}</Alert>}
-			</div>
-			<div>
-				<label>Amount</label>
-				<input
-					type="number"
-					name="amount"
-					min="1"
-					value={input.amount}
-					onChange={handleInputChange}
-				/>
-				{errors.amount && <Alert severity="error">{errors.amount}</Alert>}
-			</div>
-			<div>
+			<div className='inputContainer'>
 				<label>Date</label>
 				<input
 					type="date"
@@ -128,8 +141,8 @@ function AddForm() {
 					onChange={handleInputChange}
 				/>
 			</div>
-			<div>
-				<input type="submit" value="Add" />
+			<div  className='inputContainer'>
+				<input type="submit" value="ADD" className='formSubmitBtn' disabled={disabled}/>
 			</div>
 		</form>
 	);
