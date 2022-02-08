@@ -18,7 +18,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import './Table.css'
+import './Table.css';
 
 export default function EnhancedTable({ type }) {
 	const [order, setOrder] = React.useState('asc');
@@ -47,7 +47,7 @@ export default function EnhancedTable({ type }) {
 	const datas = [
 		{
 			id: 1,
-			concept: 'Pizza',
+			concept: 'Pizzaasdjashkdakhsdhkakhsdasdhsahkdhashkdasdkahksdhgkaghsdgasgjdgjasgdjgj',
 			category: 'Food',
 			amount: 2000,
 			date: '17/02/2022',
@@ -77,9 +77,9 @@ export default function EnhancedTable({ type }) {
 			data.concept,
 			data.category,
 			data.type === 'income' ? (
-				<b>{`+$${data.amount}`}</b>
+				<b className="tableAmount tableIncome">{`+$${data.amount}`}</b>
 			) : (
-				<b>{`-$${data.amount}`}</b>
+				<b className="tableAmount tableExpense">{`-$${data.amount}`}</b>
 			),
 			data.date
 		)
@@ -127,7 +127,7 @@ export default function EnhancedTable({ type }) {
 			label: 'CATEGORY',
 		},
 		{
-			id: 'amount',	
+			id: 'amount',
 			disablePadding: false,
 			label: 'AMOUNT',
 		},
@@ -153,10 +153,10 @@ export default function EnhancedTable({ type }) {
 
 		return (
 			<TableHead>
-				<TableRow className='tableHead'>
+				<TableRow className="tableHead">
 					<TableCell padding="checkbox">
 						<Checkbox
-						 className='tableHeadCheck'
+							className="tableHeadCheck"
 							color="primary"
 							indeterminate={numSelected > 0 && numSelected < rowCount}
 							checked={rowCount > 0 && numSelected === rowCount}
@@ -168,7 +168,7 @@ export default function EnhancedTable({ type }) {
 					</TableCell>
 					{headCells.map((headCell) => (
 						<TableCell
-						className='tableHeadSubtitles'
+							className="tableHeadSubtitles"
 							key={headCell.id}
 							padding={headCell.disablePadding ? 'none' : 'normal'}
 							sortDirection={orderBy === headCell.id ? order : false}
@@ -177,10 +177,15 @@ export default function EnhancedTable({ type }) {
 								active={orderBy === headCell.id}
 								direction={orderBy === headCell.id ? order : 'asc'}
 								onClick={createSortHandler(headCell.id)}
+								className="tableHeadSubtitle"
 							>
 								{headCell.label}
 								{orderBy === headCell.id ? (
-									<Box component="span" sx={visuallyHidden}>
+									<Box
+										component="span"
+										sx={visuallyHidden}
+										className="tableHeadSubtitle"
+									>
 										{order === 'desc'
 											? 'sorted descending'
 											: 'sorted ascending'}
@@ -230,18 +235,13 @@ export default function EnhancedTable({ type }) {
 						{numSelected} selected
 					</Typography>
 				) : (
-
-						<h2 style={{ flex: '1 1 100%' }}>
-
-						{type}
-						</h2>
-
+					<h2 style={{ flex: '1 1 100%' }}>{type}</h2>
 				)}
 
 				{numSelected > 0 && (
 					<Tooltip title="Delete">
 						<IconButton>
-							<DeleteIcon />
+							<DeleteIcon className="deleteIcon" />
 						</IconButton>
 					</Tooltip>
 				)}
@@ -300,15 +300,11 @@ export default function EnhancedTable({ type }) {
 		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
 	return (
-		<Box sx={{ width: '100%' }}>
+		<Box className="tableContainer">
 			<Paper sx={{ width: '100%', mb: 2 }}>
 				<EnhancedTableToolbar numSelected={selected.length} type={type} />
 				<TableContainer>
-					<Table
-						sx={{ minWidth: 750 }}
-						aria-labelledby="tableTitle"
-						size={'small'}
-					>
+					<Table aria-labelledby="tableTitle" size="small">
 						<EnhancedTableHead
 							numSelected={selected.length}
 							order={order}
@@ -354,21 +350,23 @@ export default function EnhancedTable({ type }) {
 								})}
 							{emptyRows > 0 && (
 								<TableRow>
-									<TableCell colSpan={6} />
+									<TableCell colSpan={4} />
 								</TableRow>
 							)}
 						</TableBody>
 					</Table>
 				</TableContainer>
-				{type !== 'Last moves' && <TablePagination
-					rowsPerPageOptions={[5, 10, 25]}
-					component="div"
-					count={rows.length}
-					rowsPerPage={rowsPerPage}
-					page={page}
-					onPageChange={handleChangePage}
-					onRowsPerPageChange={handleChangeRowsPerPage}
-				/>}
+				{type !== 'Last moves' && (
+					<TablePagination className='tablePagination'
+						rowsPerPageOptions={[5, 10, 25]}
+						component="div"
+						count={rows.length}
+						rowsPerPage={rowsPerPage}
+						page={page}
+						onPageChange={handleChangePage}
+						onRowsPerPageChange={handleChangeRowsPerPage}
+					/>
+				)}
 			</Paper>
 		</Box>
 	);

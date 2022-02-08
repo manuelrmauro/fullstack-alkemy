@@ -1,3 +1,8 @@
+.tableContainer {
+  width: 100%;
+  max-width: 50rem;
+}
+
 .tableHead {
   background-color: var(--color-black-hover);
 }
@@ -8,4 +13,46 @@
 
 .tableHeadCheck {
  color: var(--color-white) !important;
+}
+
+.deleteIcon {
+  color:var(--color-red); 
+}
+
+.tableIncome {
+  color: var(--color-blue);
+}
+
+.tableExpense {
+  color: var(--color-red);
+}
+
+.tableHeadSubtitle, .MuiTableSortLabel-icon {
+  color: var(--color-white) !important;
+}
+
+.tableHeadSubtitle:hover, .MuiTableSortLabel-icon:hover {
+  color:var(--color-white-hover) !important;
+}
+
+.MuiTableCell-root {
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+  max-width: 20vw;
+  overflow:hidden; 
+  white-space:nowrap; 
+  text-overflow: ellipsis;
+}
+
+.tablePagination, .tablePagination p, li{
+  font-size: 0.7rem !important;
+}
+
+svg {
+  font-size: 0.85rem;
+}
+
+.MuiInputBase-root, .MuiTablePaginationActions {
+  margin-left: 0 !important;
+  margin-right:1rem !important;
 }
