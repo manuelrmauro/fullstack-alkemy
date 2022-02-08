@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PieChart from '../../components/PieChart/PieChart.jsx';
 import Table from '../../components/Table/Table'
+import './Home.css'
 
 function Home() {
 
@@ -11,8 +12,8 @@ function Home() {
     setInput(e.target.value)
   }
 
-	return <div>
-    <div>
+	return <div className='homeContainer section'>
+    <div className='chartOrderContainer'>
       <label>Order by</label>
       <select value={input} onChange={handleInputChange}>
         <option value='balance'>Balance</option>

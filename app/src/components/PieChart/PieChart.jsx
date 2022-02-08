@@ -1,12 +1,11 @@
 import React from 'react';
-
 import PieChart, {
 	Series,
 	Label,
 	Connector,
 	Size,
-	Export,
 } from 'devextreme-react/pie-chart';
+import './pieChart.css'
 
 const areas = [
 	{
@@ -45,21 +44,23 @@ const areas = [
 
 function PieChartComp({title}) {
 	return (
+		<div className='pieChartContainer'>
+			<h2>{title}</h2>
 		<PieChart
+		legend={{horizontalAlignment:'center',	 width:'80vw',verticalAlignment:"bottom"}}
 			id="pie"
 			dataSource={areas}
 			palette="Bright"
-			title={title}
-		>
+			className='pieChart'
+			>
 			<Series argumentField="country" valueField="area">
-				<Label visible={true}>
+ 				<Label visible={true}>
 					<Connector visible={true} width={0.5} />
-				</Label>
+				</Label> 
 			</Series>
-
-			<Size width='500' />
-			<Export enabled={true} />
+			<Size width='100%' />
 		</PieChart>
+			</div>
 	);
 }
 

@@ -12,5 +12,12 @@ body {
   --color-red-hover: rgb(240, 100, 100);
   --color-blue: rgb(30, 160, 200);
   --color-blue-hover: rgb(100, 160, 200);
+}
 
+.section {
+  padding: 1.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
 }

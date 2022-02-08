@@ -230,14 +230,12 @@ export default function EnhancedTable({ type }) {
 						{numSelected} selected
 					</Typography>
 				) : (
-					<Typography
-						sx={{ flex: '1 1 100%' }}
-						variant="h6"
-						id="tableTitle"
-						component="div"
-					>
+
+						<h2 style={{ flex: '1 1 100%' }}>
+
 						{type}
-					</Typography>
+						</h2>
+
 				)}
 
 				{numSelected > 0 && (
