@@ -1,0 +1,24 @@
+.iconMenu {
+  color:var(--color-white)
+}
+
+.menuOption {
+  display: flex;
+  gap:0.3rem;
+  color: var(--color-black);
+  text-decoration: none;
+
+}
+
+.menuOption label {
+  cursor: pointer;
+}
+
+.menuOptionIcon {
+  color:var(--color-grey);
+
+}
+
+.menuOptionAddIcon {
+  color:var(--color-blue) !important;
+}

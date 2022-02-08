@@ -1,9 +1,11 @@
 .nav {
   display: flex;
   justify-content: space-between;
-  padding: 0.5em 0.5em 1em 1em;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  background-color: var(--color-black);
 }
 
 .navTitle {
-  font-size: 2em;
+  font-size: 1.8em;
+  color:var(--color-white)
 }
