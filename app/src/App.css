@@ -1,0 +1,37 @@
+.App {
+  text-align: center;
+}
+body {
+  --color-black: rgb(15, 15, 15);
+  --color-black-hover: rgb(40, 40, 40);
+  --color-white: white;
+  --color-white-hover: rgb(230, 230, 230);
+  --color-grey: grey;
+  --color-grey-hover: rgb(160, 160, 160);
+  --color-red: rgb(240, 50, 50);
+  --color-red-hover: rgb(240, 100, 100);
+  --color-blue: rgb(30, 138, 200);
+  --color-blue-hover: rgb(85, 174, 233);
+  --color-green: rgb(100, 210, 0);
+  --color-green-hover: rgb(140, 240, 40);
+}
+
+.section {
+  padding: 1.8rem;
+}
+
+h2 {
+  font-size: 1.4rem;
+}
+
+.filter label{
+  margin-right: 0.6rem;
+}
+
+input, select{
+  height: 2rem;
+  min-width: 5rem;  
+  font-size: 1rem;
+  border: solid 1px var(--color-grey-hover);
+  border-radius: 0.25rem;
+}

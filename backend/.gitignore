@@ -1,0 +1,8 @@
+node_modules/
+
+# dotenv environment variables file
+.env
+
+#docker
+docker-compose.yaml
+docker/database/postgres/data/
