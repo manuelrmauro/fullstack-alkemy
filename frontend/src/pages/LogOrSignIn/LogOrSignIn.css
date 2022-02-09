@@ -1,0 +1,15 @@
+.form {
+  grid-template-columns: 100%;
+  max-width: 20rem;
+}
+
+.logOrSignInContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  height: calc(100vh - 3.6rem);
+}
+
+.form h1 {
+  color: var(--color-grey);
+}
