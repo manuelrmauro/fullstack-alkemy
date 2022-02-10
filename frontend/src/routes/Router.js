@@ -24,6 +24,7 @@ function Router() {
 		</Routes> :
 		<Routes>
 			<Route path="/" element={<LogOrSingIn isRegister={true}/>} />
+			<Route path="/login" element={<LogOrSingIn/>} />
 			<Route path="*" element={<Navigate replace to='/'/>} />
 		</Routes>
 		}	

@@ -15,23 +15,12 @@ const userLogin = async (request, response) => {
 
   try {
     const user = await User.findOne({
-      where: { [Op.and]: [{ email }, { status: true }] },
+      where: { email },
     });
 
     if (!user) {
       return response.status(400).json({
-        message: 'Verifique sus credenciales',
-      });
-    }
-
-    if (user.deleted) {
-      return response.status(400).json({
-        message: 'El usuario fue borrado',
-      });
-    }
-    if (!user.validated) {
-      return response.status(401).json({
-        message: 'El usuario aun no fue validado',
+        message: "Invalid email or password",
       });
     }
 
@@ -40,41 +29,24 @@ const userLogin = async (request, response) => {
 
     if (!validPassword) {
       return response.status(400).json({
-        message: 'Verifique sus credenciales',
+        message: 'Invalid email or password',
       });
     }
     // Generar JWT
     const token = await generateJWT({
       id: user.id,
-      name: user.name,
-      roleId: user.role_id,
+      email: user.email
     });
 
-    if (!user.firstLogin) {
-      user.update({ firstLogin: true });
-      return response.status(201).json({
-        id: user.id,
-        name: user.name,
-        photo: user.photo,
-        socialPhoto: user.socialPhoto,
-        roleId: user.role_id,
-        token,
-        isFirstLogin : true
-      });
-    }
     return response.status(200).json({
       id: user.id,
-      name: user.name,
-      photo: user.photo,
-      socialPhoto: user.socialPhoto,
-      roleId: user.role_id,
+      email: user.email,
       token,
-      isFirstLogin : false
     });
   } catch (error) {
     console.log(error);
     return response.status(500).json({
-      message: 'Por favor hable con el administrador',
+      message: 'Internal server error',
     });
   }
 };

@@ -13,14 +13,14 @@ const createUser = async (request, response) => {
 
   try {
     let user = await User.findOne({
-      where: email,
+      where: {email},
     });
 
     if (user) {
       if (user.email === email)
         return response
           .status(400)
-          .json({ message: 'Este email ya esta en uso' });
+          .json({ message: 'The email is already in use' });
     }
 
     user = await User.create({
@@ -31,8 +31,7 @@ const createUser = async (request, response) => {
     // Generar JWT
     const token = await generateJWT({
       id: user.id,
-      name: user.name,
-      roleId: user.role_id,
+      email: user.email,
     });
 
     return response.status(201).json({

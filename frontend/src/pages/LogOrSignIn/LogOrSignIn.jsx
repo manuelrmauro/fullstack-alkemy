@@ -2,8 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 import './LogOrSignIn.css';
 import validator from 'validator';
+import {useDispatch} from 'react-redux'
+import { startRegister } from '../../redux/actions/authActions';
+import { Link } from 'react-router-dom';
 
 function LogOrSignIn({ isRegister }) {
+	const dispatch = useDispatch()
+
 	const [input, setInput] = useState({
 		email: '',
 		password: '',
@@ -62,9 +67,19 @@ function LogOrSignIn({ isRegister }) {
 		}
 	};
 
+	const handleRegisterSubmit = (e) => {
+		e.preventDefault()
+		dispatch(startRegister(input))
+	}
+
+	const handleLoginSubmit = (e) => {
+		e.preventDefault()
+		dispatch(startRegister)
+	}
+
 	return (
 		<div className="section logOrSignInContainer">
-			<form className="form">
+			<form className="form" onSubmit={isRegister ? handleRegisterSubmit : handleLoginSubmit}>
 				<h1>{isRegister ? 'Sign in' : 'Log in'}</h1>
 				<div className="inputContainer">
 					{errors.email ? (
@@ -77,6 +92,7 @@ function LogOrSignIn({ isRegister }) {
 						name="email"
 						value={input.email}
 						onChange={handleInputChange}
+						autoComplete='new-username'
 					/>
 				</div>
 				<div className="inputContainer">
@@ -90,6 +106,7 @@ function LogOrSignIn({ isRegister }) {
 						name="password"
 						value={input.password}
 						onChange={handleInputChange}
+						autoComplete='new-password'
 					/>
 				</div>
 				{isRegister && (
@@ -104,6 +121,7 @@ function LogOrSignIn({ isRegister }) {
 							name="repeatPassword"
 							value={input.repeatPassword}
 							onChange={handleInputChange}
+							autoComplete='new-password'
 						/>
 					</div>
 				)}
@@ -114,6 +132,10 @@ function LogOrSignIn({ isRegister }) {
 						className="formSubmitBtn"
 					/>
 				</div>
+			<p>{isRegister ? 'Do you already have an account? ' : "You don't have an account? "}
+			<Link to={isRegister ? '/login' : "/"} >{isRegister ? 'Log in' : 'Sign in'}</Link>
+			</p>
+			
 			</form>
 		</div>
 	);
