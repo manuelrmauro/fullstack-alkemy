@@ -4,7 +4,7 @@ import './LogOrSignIn.css';
 import validator from 'validator';
 import { useDispatch } from 'react-redux';
 import { startLogin, startRegister } from '../../redux/actions/authActions';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 function LogOrSignIn({ isRegister }) {

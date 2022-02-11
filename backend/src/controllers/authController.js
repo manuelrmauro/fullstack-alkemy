@@ -52,18 +52,16 @@ const userLogin = async (request, response) => {
 };
 
 const renewToken = async (request, response) => {
-  const { userId, userName, userRoleId } = request;
+  const { userId, userEmail} = request;
   // Generar JWT
   const token = await generateJWT({
     id: userId,
-    name: userName,
-    roleId: userRoleId,
+    email: userEmail,
   });
 
   return response.json({
     id: userId,
-    name: userName,
-    roleId: userRoleId,
+    email: userEmail,
     token,
   });
 };

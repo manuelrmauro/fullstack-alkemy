@@ -29,7 +29,7 @@ export default function LongMenu() {
 		}).then((result) => {
 			if (result.isConfirmed) {
 				dispatch(startLogout())
-				navigate('/login')
+				window.location.replace('/login')
 			} 
 		})
 	};

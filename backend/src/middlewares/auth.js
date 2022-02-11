@@ -19,7 +19,7 @@ module.exports = (request, response, next) => {
     const { uid } = jwt.verify(token, process.env.SECRET_JWT_SEED);
 
     request.userId = uid.id;
-    request.userName = uid.name;
+    request.userEmail = uid.email;
 
   } catch (error) {
     return response.status(401).json({
