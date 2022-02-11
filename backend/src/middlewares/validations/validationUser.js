@@ -2,14 +2,13 @@ const { check } = require('express-validator');
 
 const ValidationsUser = {
   withPassword: [
-    check('email', 'Agrega un email válido').isEmail(),
-    check('password', 'El password debe ser mínimo de 6 caracteres').isLength({
+    check('email', 'Enter a valid email').isEmail(),
+    check('password', 'The password must contains 6 or more characters').isLength({
       min: 6,
     }),
   ],
   withoutPassword: [
-    check('name', 'Ingrese su nombre completo').not().isEmpty(),
-    check('email', 'Agrega un email válido').isEmail(),
+    check('email', 'Enter a valid email').isEmail(),
   ],
 };
 
