@@ -13,3 +13,12 @@
 .form h1 {
   color: var(--color-grey);
 }
+
+.changePage {
+  color: var(--color-blue);
+  cursor: pointer;
+}
+
+.changePage:hover {
+  color: var(--color-blue-hover)
+}

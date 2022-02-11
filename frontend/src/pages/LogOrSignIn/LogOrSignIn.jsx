@@ -2,12 +2,14 @@ import React from 'react';
 import { useState } from 'react';
 import './LogOrSignIn.css';
 import validator from 'validator';
-import {useDispatch} from 'react-redux'
-import { startRegister } from '../../redux/actions/authActions';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { startLogin, startRegister } from '../../redux/actions/authActions';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function LogOrSignIn({ isRegister }) {
-	const dispatch = useDispatch()
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const [input, setInput] = useState({
 		email: '',
@@ -20,6 +22,23 @@ function LogOrSignIn({ isRegister }) {
 		password: '',
 		repeatPassword: '',
 	});
+
+	const [disabled, setDisabled] = useState(true);
+
+	useEffect(() => {
+		let count = 0;
+		Object.keys(input).forEach((key) => {
+			if (!isRegister && key === 'repeatPassword') return;
+			if (input[key].length === 0) count++;
+		});
+
+		Object.keys(errors).forEach((key) => {
+			if (!isRegister && key === 'repeatPassword') return;
+			if (errors[key].length !== 0) count++;
+		});
+		if (count === 0) setDisabled(false);
+		else setDisabled(true);
+	}, [errors, input]);
 
 	const handleInputChange = (e) => {
 		e.preventDefault();
@@ -67,19 +86,34 @@ function LogOrSignIn({ isRegister }) {
 		}
 	};
 
+	const changePage = (e) => {
+		e.preventDefault();
+		const defaultValues = {
+			email: '',
+			password: '',
+			repeatPassword: '',
+		};
+		setInput(defaultValues);
+		setErrors(defaultValues);
+		navigate(isRegister ? '/login' : '/');
+	};
+
 	const handleRegisterSubmit = (e) => {
-		e.preventDefault()
-		dispatch(startRegister(input))
-	}
+		e.preventDefault();
+		dispatch(startRegister(input));
+	};
 
 	const handleLoginSubmit = (e) => {
-		e.preventDefault()
-		dispatch(startRegister)
-	}
+		e.preventDefault();
+		dispatch(startLogin(input));
+	};
 
 	return (
 		<div className="section logOrSignInContainer">
-			<form className="form" onSubmit={isRegister ? handleRegisterSubmit : handleLoginSubmit}>
+			<form
+				className="form"
+				onSubmit={isRegister ? handleRegisterSubmit : handleLoginSubmit}
+			>
 				<h1>{isRegister ? 'Sign in' : 'Log in'}</h1>
 				<div className="inputContainer">
 					{errors.email ? (
@@ -92,7 +126,7 @@ function LogOrSignIn({ isRegister }) {
 						name="email"
 						value={input.email}
 						onChange={handleInputChange}
-						autoComplete='new-username'
+						autoComplete="new-username"
 					/>
 				</div>
 				<div className="inputContainer">
@@ -106,7 +140,7 @@ function LogOrSignIn({ isRegister }) {
 						name="password"
 						value={input.password}
 						onChange={handleInputChange}
-						autoComplete='new-password'
+						autoComplete="new-password"
 					/>
 				</div>
 				{isRegister && (
@@ -121,7 +155,7 @@ function LogOrSignIn({ isRegister }) {
 							name="repeatPassword"
 							value={input.repeatPassword}
 							onChange={handleInputChange}
-							autoComplete='new-password'
+							autoComplete="new-password"
 						/>
 					</div>
 				)}
@@ -130,12 +164,17 @@ function LogOrSignIn({ isRegister }) {
 						type="submit"
 						value={isRegister ? 'SIGN IN' : 'LOG IN'}
 						className="formSubmitBtn"
+						disabled={disabled}
 					/>
 				</div>
-			<p>{isRegister ? 'Do you already have an account? ' : "You don't have an account? "}
-			<Link to={isRegister ? '/login' : "/"} >{isRegister ? 'Log in' : 'Sign in'}</Link>
-			</p>
-			
+				<p>
+					{isRegister
+						? 'Do you already have an account? '
+						: "You don't have an account? "}
+					<span className="changePage" onClick={changePage}>
+						{isRegister ? 'Log in' : 'Sign in'}
+					</span>
+				</p>
 			</form>
 		</div>
 	);

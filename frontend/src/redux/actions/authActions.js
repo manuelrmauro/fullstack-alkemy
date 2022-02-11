@@ -15,12 +15,12 @@ export const startCheking = () => {
 			const token = localStorage.getItem('token') || '';
 			if (token !== '') {
 				const response = await apiWithToken.get('auth/renew');
-				const { id, name } = response.data;
+				const { id, email } = response.data;
 				localStorage.setItem('token', response.data.token);
 				dispatch(
 					login({
 						id,
-						name,
+						email,
 					})
 				);
 			} else {
@@ -32,57 +32,35 @@ export const startCheking = () => {
 	};
 };
 
-export const startLogin = (email, password) => {
+export const startLogin = ({email, password}) => {
 	return async (dispatch) => {
 		try {
 			await api
 				.post('/auth', { email, password })
 				.then((response) => {
-					const { id, name, token } = response.data;
+					const { id, email, token } = response.data;
 					localStorage.setItem('token', token);
 					localStorage.setItem('id', id);
-					localStorage.setItem('name', name);
+					localStorage.setItem('email', email);
 					dispatch(
 						login({
 							id,
-							name,
+							email,
 						})
 					);
-					if (response.data.isFirstLogin) {
-						window.location.replace('/rollselector');
-					} else {
-						window.location.replace('/home');
-					}
 				})
-				.catch((error) => {
-					if (error.response.status === 401) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Oops...',
-							text: 'Revisa tu email para validar tu cuenta.',
-						});
-					} else if (error.response.status === 400) {
-						Swal.fire({
-							icon: 'error',
-							title: 'Oops...',
-							text: 'Lo sentimos, el email y/o contraseña no existen o son incorrectos.',
-						});
-					} else {
-						Swal.fire({
-							icon: 'error',
-							title: 'Oops...',
-							text: 'Lo sentimos, estamos teniendo problemas con el servidor.',
-						});
-					}
+				.catch((err) => {
+					return Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: err.response.data.message || 'Internal server error',
+					});
 				});
-		} catch (error) {
-			// eslint-disable-next-line no-alert
-			// alert('Lo siento, el email o contraseña son incorrectos, o no existen.');
-			// window.location.reload(false);
-			Swal.fire({
+		} catch (err) {
+			return Swal.fire({
 				icon: 'error',
-				title: 'Oops...',
-				text: 'Lo sentimos, estamos teniendo problemas con el servidor.',
+				title: 'Error',
+				text: err.response.data.message || 'Internal server error',
 			});
 		}
 	};
@@ -128,10 +106,10 @@ export const startLogout = () => {
 export const startRegister = (input) => {
 	return async (dispatch) => {
 		try {
-			const response = await api.post('/users', input)
-			const { id, email, token } = response.data;
-			localStorage.setItem('token', token);
-			localStorage.setItem('id', id);
+			const response = await api.post('/users', input);
+			const { id, email } = response.data;
+			//	localStorage.setItem('token', token);
+			// localStorage.setItem('id', id);
 			localStorage.setItem('email', email);
 			dispatch(
 				login({
@@ -139,14 +117,14 @@ export const startRegister = (input) => {
 					email,
 				})
 			);
-      console.log('success')
-      return Swal.fire({
+			console.log('success');
+			return Swal.fire({
 				icon: 'success',
 				title: 'Success',
 				text: 'You can now log in with your new account',
 			}).then(() => {
-        window.location.replace('/login');
-      })
+				window.location.replace('/login');
+			});
 		} catch (err) {
 			return Swal.fire({
 				icon: 'error',
