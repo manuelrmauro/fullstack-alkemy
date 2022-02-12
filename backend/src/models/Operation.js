@@ -13,7 +13,7 @@ class Operation extends Model {
           allowNull: false,
         },
         amount: {
-          type: DataTypes.NUMBER,
+          type: DataTypes.INTEGER,
           allowNull:false
         },
         date: {

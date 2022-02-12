@@ -106,9 +106,10 @@ export const startLogout = () => {
 export const startRegister = (input) => {
 	return async (dispatch) => {
 		try {
-			const response = await api.post('/users', input);
+			console.log(input)
+			const response = await api.post('/user', input);
 			const { id, email } = response.data;
-			//	localStorage.setItem('token', token);
+			//localStorage.setItem('token', token);
 			// localStorage.setItem('id', id);
 			localStorage.setItem('email', email);
 			dispatch(

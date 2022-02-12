@@ -5,3 +5,12 @@
   gap: 1.5rem;
 }
 
+.total {
+  font-size: calc(1rem + 8vw);
+  margin: 0;
+}
+
+.totalTitle {
+  margin: 0;
+}
+

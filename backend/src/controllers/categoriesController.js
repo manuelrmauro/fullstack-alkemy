@@ -1,7 +1,7 @@
 const { Op } = require('sequelize');
 const Category = require('../models/Category');
 
-const order = ['id', 'desc'];
+const order = [['id', 'desc']];
 
 const getCategories = async (req, res) => {
 	try {
@@ -10,7 +10,7 @@ const getCategories = async (req, res) => {
 		const or = [{ user_id: userId }, { allowDelete: false }];
 		let categories;
 		if (type === 'income') {
-			categories = await Caterogy.findAll({
+			categories = await Category.findAll({
 				order,
 				where: { [Op.and]: [{ type: 'Income' }, { [Op.or]: or }] },
 			});
@@ -24,6 +24,7 @@ const getCategories = async (req, res) => {
 		}
 		res.status(200).json(categories);
 	} catch (error) {
+		console.log(error)
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
