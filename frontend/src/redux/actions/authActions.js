@@ -32,7 +32,7 @@ export const startCheking = () => {
 	};
 };
 
-export const startLogin = ({email, password}) => {
+export const startLogin = ({ email, password }) => {
 	return async (dispatch) => {
 		try {
 			await api
@@ -49,6 +49,7 @@ export const startLogin = ({email, password}) => {
 						})
 					);
 				})
+				window.location.replace('/')
 				.catch((err) => {
 					return Swal.fire({
 						icon: 'error',
@@ -103,37 +104,24 @@ export const startLogout = () => {
 	};
 };
 
-export const startRegister = (input) => {
-	return async (dispatch) => {
-		try {
-			console.log(input)
-			const response = await api.post('/user', input);
-			const { id, email } = response.data;
-			//localStorage.setItem('token', token);
-			// localStorage.setItem('id', id);
-			localStorage.setItem('email', email);
-			dispatch(
-				login({
-					id,
-					email,
-				})
-			);
-			console.log('success');
-			return Swal.fire({
-				icon: 'success',
-				title: 'Success',
-				text: 'You can now log in with your new account',
-			}).then(() => {
-				window.location.replace('/login');
-			});
-		} catch (err) {
-			return Swal.fire({
-				icon: 'error',
-				title: 'Error',
-				text: err.response.data.message || 'Internal server error',
-			});
-		}
-	};
+export const startRegister = async (input) => {
+	try {
+		console.log(input);
+		await api.post('/user', input);
+		return Swal.fire({
+			icon: 'success',
+			title: 'Success',
+			text: 'You can now log in with your new account',
+		}).then(() => {
+			window.location.replace('/login');
+		});
+	} catch (err) {
+		return Swal.fire({
+			icon: 'error',
+			title: 'Error',
+			text: err.response.data.message || 'Internal server error',
+		});
+	}
 };
 
 export const startGoogleRegister = (tokenId) => {

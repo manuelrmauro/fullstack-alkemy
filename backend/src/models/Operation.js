@@ -18,7 +18,7 @@ class Operation extends Model {
         },
         date: {
           type: DataTypes.DATEONLY,
-          allowNull: true
+          allowNull: false
         }
       },
       {

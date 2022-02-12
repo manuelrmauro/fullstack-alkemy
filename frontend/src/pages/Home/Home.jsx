@@ -12,7 +12,6 @@ function Home() {
 	useEffect(() => {
 		apiWithToken.get('/operations/resume').then((data) => {
 			setResume(data.data);
-			console.log(data.data);
 		});
 	}, []);
 
@@ -22,8 +21,8 @@ function Home() {
 				{ category: 'Incomes', area: resume.totalIncomes },
 				{ category: 'Expenses', area: resume.totalExpenses },
 			]);
-		}
-
+		} else if (resume.totalIncomes) setBalance([{ category: 'Incomes', area: resume.totalIncomes }])
+		 else if (resume.totalExpenses) setBalance([{ category: 'Expenses', area: resume.totalExpenses }])
 		if (Number.isInteger(resume.total)) {
 			let total 
 			if (resume.total < 0) {
@@ -47,16 +46,17 @@ function Home() {
 					<p className='total'>{resume.total}</p>
 				</div>
 			<div>
-				
-				<div className="filter">
+				{resume.operations && resume.operations.length === 0 && <p style={{margin: 0}}>You haven't done any operation yet...
+					</p>}
+				{resume.operations && resume.operations.length > 0 && <div className="filter">
 					<label>Order by</label>
 					<select value={input} onChange={handleInputChange}>
 						<option value="balance">Balance</option>
 						<option value="incomes">Incomes</option>
 						<option value="expenses">Expenses</option>
 					</select>
-				</div>
-				<div>
+				</div>}
+				{resume.operations && resume.operations.length > 0 && <div>
 					{input === 'balance' && (
 						<PieChart title="Balance" areas={balance}></PieChart>
 					)}
@@ -72,9 +72,9 @@ function Home() {
 							areas={resume.expensesCategories}
 						></PieChart>
 					)}
-				</div>
+				</div>}
 			</div>
-			{resume.operations && (
+			{resume.operations && resume.operations.length > 0 && (
 				<Table type="Last moves" data={resume.operations} />
 			)}
 		</div>
