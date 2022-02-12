@@ -28,19 +28,39 @@ function ShowData({ type }) {
 	}, [type]);
 
 	useEffect(() => {
-		setFinalCategories(categories.map(category => <option key={category.id} value={category.id}>{category.name}</option>))
-	}, [categories])
+		setFinalCategories(
+			categories.map((category) => (
+				<option key={category.id} value={category.id}>
+					{category.name}
+				</option>
+			))
+		);
+	}, [categories]);
 
 	return (
 		<div className="showDataContainer section">
-			<div className="filter">
-				<label>Category</label>
-				<select>
-				<option key='0' value='all'>All</option>)
-					{finalCategories && finalCategories}
-				</select>
-			</div>
-			{data && <Table type={type} data={data} />}
+			{data.length === 0 && (
+				<div>
+					<h2 style={{ marginTop: 0 }}>{type}</h2>
+					<p>
+						{type === 'Incomes'
+							? "You haven't done any income operation yet... "
+							: "You haven't done any expense operation yet... "}
+					</p>
+				</div>
+			)}
+			{data.length > 0 && (
+				<div className="filter">
+					<label>Category</label>
+					<select>
+						<option key="0" value="all">
+							All
+						</option>
+						){finalCategories && finalCategories}
+					</select>
+				</div>
+			)}
+			{data.length > 0 && <Table type={type} data={data} />}
 		</div>
 	);
 }

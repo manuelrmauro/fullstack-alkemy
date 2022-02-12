@@ -85,7 +85,7 @@ const getResume = async (req, res) => {
 				category.area += expense.amount;
 			}
 		}); 
-		const total = totalIncomes - totalExpenses;
+		const total = (totalIncomes - totalExpenses) + 0;
 		res.status(200).json({
 			total,
 			operations,
