@@ -20,7 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import './Table.css';
 
-export default function EnhancedTable({ type }) {
+export default function EnhancedTable({ type, data }) {
 	const [order, setOrder] = React.useState('asc');
 	const [orderBy, setOrderBy] = React.useState('calories');
 	const [selected, setSelected] = React.useState([]);
@@ -44,39 +44,12 @@ export default function EnhancedTable({ type }) {
 		};
 	}
 
-	const datas = [
-		{
-			id: 1,
-			concept: 'Pizzaasdjashkdakhsdhkakhsdasdhsahkdhashkdasdkahksdhgkaghsdgasgjdgjasgdjgj',
-			category: 'Food',
-			amount: 2000,
-			date: '17/02/2022',
-			type: 'income',
-		},
-		{
-			id: 2,
-			concept: 'Pizzas',
-			category: 'Food',
-			amount: 2000,
-			date: '17/02/2022',
-			type: 'income',
-		},
-		{
-			id: 3,
-			concept: 'Pizza',
-			category: 'Food',
-			amount: 2000,
-			date: '17/02/2022',
-			type: 'expense',
-		},
-	];
-
-	const rows = datas.map((data) =>
+	const rows = data.map((data) =>
 		createData(
 			data.id,
 			data.concept,
-			data.category,
-			data.type === 'income' ? (
+			data.category.name,
+			data.type === 'Income' ? (
 				<b className="tableAmount tableIncome">{`+$${data.amount}`}</b>
 			) : (
 				<b className="tableAmount tableExpense">{`-$${data.amount}`}</b>
@@ -357,7 +330,8 @@ export default function EnhancedTable({ type }) {
 					</Table>
 				</TableContainer>
 				{type !== 'Last moves' && (
-					<TablePagination className='tablePagination'
+					<TablePagination
+						className="tablePagination"
 						rowsPerPageOptions={[5, 10, 25]}
 						component="div"
 						count={rows.length}

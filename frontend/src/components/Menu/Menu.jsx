@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
@@ -17,7 +17,6 @@ import Swal from 'sweetalert2';
 export default function LongMenu() {
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const dispatch = useDispatch();
-	const navigate = useNavigate()
 	const open = Boolean(anchorEl);
 
 	const handleLogOut = () => {
@@ -28,40 +27,57 @@ export default function LongMenu() {
 			denyButtonText: 'No',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				dispatch(startLogout())
-				window.location.replace('/login')
-			} 
-		})
+				dispatch(startLogout());
+				window.location.replace('/login');
+			}
+		});
+	};
+
+	const handleClose = () => {
+		setAnchorEl(null);
 	};
 
 	const options = [
-		<Link to="/" className="menuOption">
-			<HomeIcon className="menuOptionIcon" />
-			<label>Home</label>
+		<Link to="/" className="menuOption" onClick={handleClose}>
+			<MenuItem>
+				<HomeIcon className="menuOptionIcon" />
+				<label>Home</label>
+			</MenuItem>
 		</Link>,
-		<Link to="/incomes" className="menuOption">
-			<ArchiveIcon className="menuOptionIcon" />
-			<label>Incomes</label>
+		<Link to="/incomes" className="menuOption" onClick={handleClose}>
+			<MenuItem>
+				<ArchiveIcon className="menuOptionIcon" />
+				<label>Incomes</label>
+			</MenuItem>
 		</Link>,
-		<Link to="/expenses" className="menuOption">
-			<UnarchiveIcon className="menuOptionIcon" />
-			<label>Expenses</label>
+		<Link to="/expenses" className="menuOption" onClick={handleClose}>
+			<MenuItem>
+				<UnarchiveIcon className="menuOptionIcon" />
+				<label>Expenses</label>
+			</MenuItem>
 		</Link>,
-		<Link to="/add" className="menuOption">
-			<AddCircleIcon className="menuOptionIcon menuOptionAddIcon" />
-			<label>Add</label>
+		<Link to="/add" className="menuOption" onClick={handleClose}>
+			<MenuItem>
+				<AddCircleIcon className="menuOptionIcon menuOptionAddIcon" />
+				<label>Add</label>
+			</MenuItem>
 		</Link>,
-		<div onClick={handleLogOut} className="menuOption">
-			<LogoutIcon className="menuOptionIcon" />
-			<label>Log out</label>
+		<div
+			onClick={() => {
+				handleLogOut();
+				handleClose();
+			}}
+			className="menuOption"
+		>
+			<MenuItem>
+				<LogoutIcon className="menuOptionIcon" />
+				<label>Log out</label>
+			</MenuItem>
 		</div>,
 	];
 
 	const handleClick = (event) => {
 		setAnchorEl(event.currentTarget);
-	};
-	const handleClose = () => {
-		setAnchorEl(null);
 	};
 
 	return (
@@ -91,11 +107,7 @@ export default function LongMenu() {
 					},
 				}}
 			>
-				{options.map((option) => (
-					<MenuItem key={option} onClick={handleClose}>
-						{option}
-					</MenuItem>
-				))}
+				{options}
 			</Menu>
 		</div>
 	);

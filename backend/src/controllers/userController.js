@@ -2,8 +2,6 @@ const { Op } = require('sequelize');
 const { validationResult } = require('express-validator');
 const { generateJWT } = require('../helpers/generateJWT');
 const User = require('../models/User');
-const Category = require('../models/Category');
-const Operation = require('../models/Operation');
 
 const createUser = async (request, response) => {
 	const { email, password } = request.body;

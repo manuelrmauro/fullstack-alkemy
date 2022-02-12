@@ -13,16 +13,17 @@ class Operation extends Model {
           allowNull: false,
         },
         amount: {
-          type: DataTypes.NUMBER,
+          type: DataTypes.INTEGER,
           allowNull:false
         },
         date: {
           type: DataTypes.DATEONLY,
-          allowNull: false
+          allowNull: true
         }
       },
       {
         sequelize,
+        freezeTableName: true,
       }
     );
   }

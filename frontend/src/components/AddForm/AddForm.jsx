@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { apiWithToken } from '../../services/api';
 import './AddForm.css';
-import { useEffect } from 'react';
+import {useNavigate} from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 function AddForm() {
+	const navigate = useNavigate()
+
 	//date
 	var today = new Date();
 	var dd = today.getDate();
@@ -34,14 +38,46 @@ function AddForm() {
 
 	const [disabled, setDisabled] = useState(true);
 
+	const [categories, setCategories] = useState([]);
+	const [finalCategories, setFinalCategories] = useState([]);
+
+	useEffect(() => {
+		setInput({ ...input, category: 'none' });
+		if (input.type === 'Income') {
+			apiWithToken.get('/categories?type=income').then((data) => {
+				setCategories(data.data);
+			});
+		} else if (input.type === 'Expense') {
+			apiWithToken.get('/categories?type=expense').then((data) => {
+				setCategories(data.data);
+			});
+		} else {
+			setCategories([]);
+		}
+	}, [input.type]);
+
+	useEffect(() => {
+		setFinalCategories(
+			categories.map((category) => (
+				<option key={category.id} value={category.id}>
+					{category.name}
+				</option>
+			))
+		);
+	}, [categories]);
+
 	useEffect(() => {
 		let count = 0;
+		console.log(errors, input)
+		Object.keys(input).forEach((key) => {
+			if (input[key] === '' || input[key] === 'none') count++;
+		});
 		Object.keys(errors).forEach((key) => {
 			if (errors[key] !== '') count++;
 		});
 		if (count === 0) setDisabled(false);
 		else setDisabled(true);
-	}, [errors]);
+	}, [errors, input]);
 
 	const handleErrors = (props) => {
 		let finalErrors = { ...errors };
@@ -80,7 +116,6 @@ function AddForm() {
 					break;
 			}
 		}
-		console.log(finalErrors);
 		setErrors(finalErrors);
 	};
 
@@ -93,6 +128,21 @@ function AddForm() {
 	const handleOnSubmit = (e) => {
 		e.preventDefault();
 		handleErrors(input);
+		apiWithToken.post('/operations', input).then(() => {
+			Swal.fire({
+				icon: 'success',
+				title: 'Success',
+				text: 'Operation added',
+			}).then(() => {
+				navigate('/')
+			})
+		}).catch(err => {
+			Swal.fire({
+				icon: 'error',
+				title: 'Error',
+				text: err.response.data.message || 'Internal server error',
+			});
+		})
 	};
 
 	return (
@@ -131,8 +181,8 @@ function AddForm() {
 				)}
 				<select name="type" value={input.type} onChange={handleInputChange}>
 					<option value="none"></option>
-					<option value="income">Income</option>
-					<option value="expense">Expense</option>
+					<option value="Income">Income</option>
+					<option value="Expense">Expense</option>
 				</select>
 			</div>
 			<div className="inputContainer">
@@ -145,9 +195,10 @@ function AddForm() {
 					name="category"
 					value={input.category}
 					onChange={handleInputChange}
+					disabled={input.type === 'none'}
 				>
 					<option value="none"></option>
-					<option value="all">All</option>
+					{finalCategories && finalCategories}
 				</select>
 			</div>
 			<div className="inputContainer">
