@@ -20,12 +20,14 @@ class Category extends Model {
       },
       {
         sequelize,
+        freezeTableName: true,
       }
     );
   }
 
   static associate(models) {
     this.hasMany(models.Operation, { foreignKey: 'category_id', as: 'operation' });
+    this.belongsTo(models.User,{ foreignKey: 'user_id', as: 'user' })
   }
 }
 

@@ -18,11 +18,12 @@ class Operation extends Model {
         },
         date: {
           type: DataTypes.DATEONLY,
-          allowNull: false
+          allowNull: true
         }
       },
       {
         sequelize,
+        freezeTableName: true,
       }
     );
   }
