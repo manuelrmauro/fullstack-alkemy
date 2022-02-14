@@ -56,3 +56,7 @@ svg {
   margin-left: 0 !important;
   margin-right:1rem !important;
 }
+
+.editBtn {
+  z-index: 100000;
+}

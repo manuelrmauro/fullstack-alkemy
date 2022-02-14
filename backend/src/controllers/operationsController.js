@@ -39,6 +39,19 @@ const getOperations = async (req, res) => {
 	}
 };
 
+const getOperationById = async(req, res) => {
+	try {
+		const { userId } = req;
+		const {id} =  req.params
+		const operation = await Operation.findByPk(id, {include: { model: Category, as: 'category' }})
+		if (!operation) return res.status(404).json({message: 'Operation not found'})
+		if (operation.user_id !== userId) return res.status(404).json({message: 'Operation not found'})
+		return res.status(200).json(operation)
+	} catch (error) {
+		return res.status(500).json({message: 'Internal server error'})
+	}
+}
+
 const getResume = async (req, res) => {
 	try {
 		const { userId } = req;
@@ -99,7 +112,6 @@ const getResume = async (req, res) => {
 			expensesCategories,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
@@ -161,6 +173,7 @@ const deleteOperation = async (req, res) => {
 
 module.exports = {
 	getOperations,
+	getOperationById,
 	addOperation,
 	uploadOperation,
 	deleteOperation,

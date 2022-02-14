@@ -1,4 +1,4 @@
-import * as React from 'react';
+import  React,{useState} from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -21,8 +21,19 @@ import { visuallyHidden } from '@mui/utils';
 import './Table.css';
 import Swal from 'sweetalert2'
 import { apiWithToken } from '../../services/api';
+import EditIcon from '@mui/icons-material/Edit';
+import { Modal } from 'react-responsive-modal';
+import EditOperation from '../EditOperation/EditOperation';
+import 'react-responsive-modal/styles.css';
 
 export default function EnhancedTable({ type, data }) {
+	const [open, setOpen] = useState(false);
+
+	const [id, setId] = useState(-1)
+	const onOpenModal = (id) => {setOpen(true); setId(id)};
+	const onCloseModal = () => {setOpen(false); setId(-1)};
+
+
 	const [order, setOrder] = React.useState('asc');
 	const [orderBy, setOrderBy] = React.useState('calories');
 	const [selected, setSelected] = React.useState([]);
@@ -51,23 +62,21 @@ export default function EnhancedTable({ type, data }) {
 	}
 
 	React.useEffect(() => {
-		console.log(selected)
 	},[selected])
 	// others START
-	function createData(id, concept, category, amount, date, type) {
+	function createData( concept, category, amount, date, edit) {
 		return {
-			id,
 			concept,
 			category,
 			amount,
 			date,
-			type,
+			edit
 		};
 	}
 
+
 	const rows = data.map((data) =>
 		createData(
-			data.id,
 			data.concept,
 			data.category.name,
 			data.type === 'Income' ? (
@@ -75,8 +84,9 @@ export default function EnhancedTable({ type, data }) {
 			) : (
 				<b className="tableAmount tableExpense">{`-$${data.amount}`}</b>
 			),
-			data.date
-		)
+			data.date,
+			<button type='button' className='editBtn' name='edit' onClick={() => {onOpenModal(data.id)}}><EditIcon/></button>
+			)
 	);
 
 	function descendingComparator(a, b, orderBy) {
@@ -130,6 +140,11 @@ export default function EnhancedTable({ type, data }) {
 			disablePadding: false,
 			label: 'DATE',
 		},
+		{
+			id: 'edit',
+			disablePadding: false,
+			label: '',
+		},
 	];
 
 	function EnhancedTableHead(props) {
@@ -149,7 +164,6 @@ export default function EnhancedTable({ type, data }) {
 			<TableHead>
 				<TableRow className="tableHead">
 					<TableCell padding="checkbox">
-						{console.log(type)}
 						{type !== 'Last moves' && <Checkbox
 							className="tableHeadCheck"
 							color="primary"
@@ -253,7 +267,7 @@ export default function EnhancedTable({ type, data }) {
 	// other END
 
 	const handleSelectAllClick = (event) => {
-		if (event.target.checked) {
+		if (event.target) {
 			const newSelecteds = rows.map((n) => n.id);
 			setSelected(newSelecteds);
 			return;
@@ -262,6 +276,8 @@ export default function EnhancedTable({ type, data }) {
 	};
 
 	const handleClick = (event, name) => {
+		const tag =event.target.tagName
+		if (tag === 'svg' || tag === 'path' || tag === 'BUTTON') return
 		const selectedIndex = selected.indexOf(name);
 		let newSelected = [];
 
@@ -298,6 +314,9 @@ export default function EnhancedTable({ type, data }) {
 
 	return (
 		<Box className="tableContainer">
+						<Modal open={open} onClose={onCloseModal} center>
+				<EditOperation id={id} />
+			</Modal>
 			<Paper sx={{ width: '100%', mb: 2 }}>
 				<EnhancedTableToolbar numSelected={selected.length} type={type} />
 				<TableContainer>
@@ -342,12 +361,13 @@ export default function EnhancedTable({ type, data }) {
 											<TableCell align="left">{row.category}</TableCell>
 											<TableCell align="left">{row.amount}</TableCell>
 											<TableCell align="left">{row.date}</TableCell>
+											<TableCell align="left">{row.edit}</TableCell>
 										</TableRow>
 									);
 								})}
 							{emptyRows > 0 && (
 								<TableRow>
-									<TableCell colSpan={4} />
+									<TableCell colSpan={6} />
 								</TableRow>
 							)}
 						</TableBody>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { apiWithToken } from '../../services/api';
 import Swal from 'sweetalert2'
+import './EditCategories.css'
 
 function EditCategories({onRefresh}) {
 	const [input, setInput] = useState({
@@ -83,7 +84,7 @@ function EditCategories({onRefresh}) {
   }
 
 	return (
-		<div >
+		<div className='addCategoryContainer' >
 			<h2>New category</h2>
 			<div className="inputContainer">
 				{errors.name ? (

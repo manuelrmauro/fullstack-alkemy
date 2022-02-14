@@ -16,6 +16,11 @@ class Category extends Model {
           type: DataTypes.BOOLEAN,
           allowNull: false,
           defaultValue: false
+        },
+        deleted: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false
         }
       },
       {

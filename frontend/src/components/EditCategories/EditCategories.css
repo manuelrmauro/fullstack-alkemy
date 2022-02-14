@@ -1,0 +1,14 @@
+.addCategoryContainer {
+  width: 70vw;
+  text-align: center;
+  max-width: 20rem;
+  padding: 0.5rem;
+}
+
+@media (max-width: 300px) {
+	.addCategoryContainer {
+		width: 60vw;
+	}
+}
+
+

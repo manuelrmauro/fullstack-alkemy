@@ -9,7 +9,9 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import EditCategories from '../../components/EditCategories/EditCategories';
 
-function AddForm() {
+function AddForm({edit, id}) {
+
+
 	const [open, setOpen] = useState(false);
 
 	const onOpenModal = () => setOpen(true);
@@ -39,6 +41,22 @@ function AddForm() {
 		date: today,
 	});
 
+	useEffect(() => {
+		if (id !== -1) {
+			apiWithToken
+				.get('/operations/id/' + id)
+				.then((res) => {
+					setInput({
+						type: res.data.type,
+						category:res.data.category_id + (res.data.category.allowDelete ? 'T' : 'F'),
+						concept:res.data.concept,
+						amount:res.data.amount,
+						date:res.data.date,
+					});
+				})
+		}
+	}, [id]);
+
 	const [errors, setErrors] = useState({
 		type: '',
 		category: '',
@@ -57,7 +75,16 @@ function AddForm() {
 
 	const [categories, setCategories] = useState([]);
 
+	const [mountEdit, setMountEdit] = useState(true)
+
+	let count = 2
 	useEffect(() => {
+		if (edit && mountEdit) {
+			count--
+			if(count === 0) {
+				setMountEdit(false)
+			}
+		} else
 		setInput({ ...input, category: 'none' });
 		if (input.type === 'Income') {
 			apiWithToken.get('/categories?type=income').then((data) => {
@@ -181,8 +208,12 @@ function AddForm() {
 		});
 	};
 
+	const handleEdit = (e) => {
+		e.preventDefault()
+	}
+
 	return (
-		<form onSubmit={handleOnSubmit} className="form">
+		<form onSubmit={edit ? handleEdit : handleOnSubmit} className="form">
 			<Modal open={open} onClose={onCloseModal} center>
 				<EditCategories onRefresh={onRefresh} />
 			</Modal>
@@ -250,10 +281,10 @@ function AddForm() {
 					<button  className="deleteBtn" 
 						type="button"
 						onClick={handleDeleteCategory}
-						disabled={input.category.charAt(input.category.length - 1) !== 'T'}
+						disabled={input.category.charAt(input.category.length - 1) !== 'T'} 
 					>
 						<DeleteIcon/>
-					</button>
+					</button> 
 				</div>
 			</div>
 			<div className="inputContainer">
