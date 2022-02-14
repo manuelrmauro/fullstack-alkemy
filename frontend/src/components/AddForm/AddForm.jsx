@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { apiWithToken } from '../../services/api';
 import './AddForm.css';
-import {useNavigate} from 'react-router-dom'
-import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Modal } from 'react-responsive-modal';
+import 'react-responsive-modal/styles.css';
+import EditCategories from '../../components/EditCategories/EditCategories';
 
 function AddForm() {
-	const navigate = useNavigate()
+	const [open, setOpen] = useState(false);
+
+	const onOpenModal = () => setOpen(true);
+	const onCloseModal = () => setOpen(false);
+
+	const navigate = useNavigate();
 
 	//date
 	var today = new Date();
@@ -36,10 +46,16 @@ function AddForm() {
 		amount: '',
 	});
 
+	const [refresh, setRefresh] = useState(false);
+
+	const onRefresh = () => {
+		setRefresh(true);
+		setOpen(false);
+	};
+
 	const [disabled, setDisabled] = useState(true);
 
 	const [categories, setCategories] = useState([]);
-	const [finalCategories, setFinalCategories] = useState([]);
 
 	useEffect(() => {
 		setInput({ ...input, category: 'none' });
@@ -54,21 +70,11 @@ function AddForm() {
 		} else {
 			setCategories([]);
 		}
-	}, [input.type]);
-
-	useEffect(() => {
-		setFinalCategories(
-			categories.map((category) => (
-				<option key={category.id} value={category.id}>
-					{category.name}
-				</option>
-			))
-		);
-	}, [categories]);
+		setRefresh(false);
+	}, [input.type, refresh]);
 
 	useEffect(() => {
 		let count = 0;
-		console.log(errors, input)
 		Object.keys(input).forEach((key) => {
 			if (input[key] === '' || input[key] === 'none') count++;
 		});
@@ -128,25 +134,58 @@ function AddForm() {
 	const handleOnSubmit = (e) => {
 		e.preventDefault();
 		handleErrors(input);
-		apiWithToken.post('/operations', input).then(() => {
-			Swal.fire({
-				icon: 'success',
-				title: 'Success',
-				text: 'Operation added',
-			}).then(() => {
-				navigate('/')
+		apiWithToken
+			.post('/operations', { ...input, category: input.category.slice(0,-1)})
+			.then(() => {
+				Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: 'Operation added',
+				}).then(() => {
+					navigate('/');
+				});
 			})
-		}).catch(err => {
-			Swal.fire({
-				icon: 'error',
-				title: 'Error',
-				text: err.response.data.message || 'Internal server error',
+			.catch((err) => {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: err.response.data.message || 'Internal server error',
+				});
 			});
-		})
+	};
+
+	const handleDeleteCategory = () => {
+		Swal.fire({
+			title: `Delete this category?`,
+			showDenyButton: true,
+			confirmButtonText: 'Yes',
+			denyButtonText: 'No',
+		}).then(() => {
+			apiWithToken
+				.delete('/categories/' + input.category.slice(0,-1))
+				.then(() => {
+					Swal.fire({
+						icon: 'success',
+						title: 'Success',
+						text: 'Category deleted',
+					})
+					setRefresh(true)
+				})
+				.catch((err) => {
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: err.response.data.message || 'Internal server error',
+					});
+				});
+		});
 	};
 
 	return (
 		<form onSubmit={handleOnSubmit} className="form">
+			<Modal open={open} onClose={onCloseModal} center>
+				<EditCategories onRefresh={onRefresh} />
+			</Modal>
 			<div className="inputContainer">
 				{errors.concept ? (
 					<label className="inputAlert">{errors.concept}</label>
@@ -191,15 +230,31 @@ function AddForm() {
 				) : (
 					<label>Category</label>
 				)}
-				<select
-					name="category"
-					value={input.category}
-					onChange={handleInputChange}
-					disabled={input.type === 'none'}
-				>
-					<option value="none"></option>
-					{finalCategories && finalCategories}
-				</select>
+				<div className="categoryInputContainer">
+					<select
+						name="category"
+						value={input.category}
+						onChange={handleInputChange}
+						disabled={input.type === 'none'}
+					>
+						<option value="none"></option>
+						{categories.map((category) => (
+							<option key={category.id} value={category.id +( category.allowDelete ? 'T': 'F')}>
+								{category.name}
+							</option>
+						))}
+					</select>
+					<button type="button" onClick={onOpenModal}>
+						<AddCircleIcon />
+					</button>
+					<button  className="deleteBtn" 
+						type="button"
+						onClick={handleDeleteCategory}
+						disabled={input.category.charAt(input.category.length - 1) !== 'T'}
+					>
+						<DeleteIcon/>
+					</button>
+				</div>
 			</div>
 			<div className="inputContainer">
 				<label>Date</label>

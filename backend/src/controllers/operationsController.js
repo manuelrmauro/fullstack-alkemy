@@ -7,19 +7,23 @@ const order = [['id', 'desc']];
 const getOperations = async (req, res) => {
 	try {
 		const { userId } = req;
-		const { type } = req.query;
+		const { type, category } = req.query;
+		const whereOpAnd = [{ user_id: userId }];
 		let operations;
+		if (category && category !== 'all') whereOpAnd.push({ category_id: category });
 		if (type === 'income') {
+			whereOpAnd.push({ type: 'Income' });
 			operations = await Operation.findAll({
 				order,
 				include: { model: Category, as: 'category' },
-				where: { [Op.and]: [{ type: 'Income' }, { user_id: userId }] },
+				where: { [Op.and]: whereOpAnd },
 			});
 		} else if (type === 'expense') {
+			whereOpAnd.push({ type: 'Expense' });
 			operations = await Operation.findAll({
 				order,
 				include: { model: Category, as: 'category' },
-				where: { [Op.and]: [{ type: 'Expense' }, { user_id: userId }] },
+				where: { [Op.and]: whereOpAnd },
 			});
 		} else {
 			operations = await Operation.findAll({
@@ -56,8 +60,8 @@ const getResume = async (req, res) => {
 		let totalExpenses = 0;
 		let incomesCategories = [];
 		let expensesCategories = [];
-		console.log(incomes, expenses)
-	 	incomes.forEach((income) => {
+		console.log(incomes, expenses);
+		incomes.forEach((income) => {
 			totalIncomes += income.amount;
 			const category = incomesCategories.find(
 				(item) => item.category === income.category.name
@@ -84,8 +88,8 @@ const getResume = async (req, res) => {
 			} else {
 				category.area += expense.amount;
 			}
-		}); 
-		const total = (totalIncomes - totalExpenses) + 0;
+		});
+		const total = totalIncomes - totalExpenses + 0;
 		res.status(200).json({
 			total,
 			operations,

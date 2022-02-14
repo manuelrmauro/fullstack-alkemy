@@ -19,6 +19,8 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import './Table.css';
+import Swal from 'sweetalert2'
+import { apiWithToken } from '../../services/api';
 
 export default function EnhancedTable({ type, data }) {
 	const [order, setOrder] = React.useState('asc');
@@ -32,6 +34,25 @@ export default function EnhancedTable({ type, data }) {
 		setOrderBy(property);
 	};
 
+	const handleDelete = () => {
+		Swal.fire({
+			title: 'Do you want to delete this operation/s?',
+			showDenyButton: true,
+			confirmButtonText: 'Yes',
+			denyButtonText: 'No',
+		}).then((result) => {
+			if (result.isConfirmed) {
+				selected.forEach(id => {
+					apiWithToken.delete(`/operations/${id}`)
+				})
+				window.location.reload()
+			}
+		})
+	}
+
+	React.useEffect(() => {
+		console.log(selected)
+	},[selected])
 	// others START
 	function createData(id, concept, category, amount, date, type) {
 		return {
@@ -128,7 +149,8 @@ export default function EnhancedTable({ type, data }) {
 			<TableHead>
 				<TableRow className="tableHead">
 					<TableCell padding="checkbox">
-						<Checkbox
+						{console.log(type)}
+						{type !== 'Last moves' && <Checkbox
 							className="tableHeadCheck"
 							color="primary"
 							indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -137,7 +159,7 @@ export default function EnhancedTable({ type, data }) {
 							inputProps={{
 								'aria-label': 'select all',
 							}}
-						/>
+						/>}
 					</TableCell>
 					{headCells.map((headCell) => (
 						<TableCell
@@ -184,6 +206,8 @@ export default function EnhancedTable({ type, data }) {
 	const EnhancedTableToolbar = (props) => {
 		const { numSelected } = props;
 
+
+
 		return (
 			<Toolbar
 				sx={{
@@ -212,7 +236,7 @@ export default function EnhancedTable({ type, data }) {
 				)}
 
 				{numSelected > 0 && (
-					<Tooltip title="Delete">
+					<Tooltip title="Delete" onClick={handleDelete}>
 						<IconButton>
 							<DeleteIcon className="deleteIcon" />
 						</IconButton>
