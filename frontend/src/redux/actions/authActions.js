@@ -71,23 +71,22 @@ export const startGoogleLogin = (tokenId) => {
 	return async (dispatch) => {
 		try {
 			const response = await api.post('/auth/social/google', { tokenId });
-			const { id, name, token } = response.data;
+			const { id, email, token } = response.data;
 			localStorage.setItem('token', token);
 			localStorage.setItem('id', id);
-			localStorage.setItem('name', name);
+			localStorage.setItem('email', email);
 			dispatch(
 				login({
 					id,
-					name,
+					email,
 				})
 			);
-			return window.location.replace('/home');
-		} catch (error) {
-			console.log(error);
+			return window.location.replace('/');
+		} catch (err) {
 			return Swal.fire({
 				icon: 'error',
-				title: 'Oops...',
-				text: 'Lo sentimos, Algo Salio mal',
+				title: 'Error',
+				text: err.response.data.message || 'Internal server error',
 			});
 		}
 	};
@@ -122,31 +121,4 @@ export const startRegister = async (input) => {
 			text: err.response.data.message || 'Internal server error',
 		});
 	}
-};
-
-export const startGoogleRegister = (tokenId) => {
-	return async (dispatch) => {
-		try {
-			const response = await api.post('/auth/social/google', { tokenId });
-			const { id, name, token } = response.data;
-			localStorage.setItem('token', token);
-			localStorage.setItem('id', id);
-			localStorage.setItem('name', name);
-
-			dispatch(
-				login({
-					id,
-					name,
-				})
-			);
-			return window.location.replace('/rollSelector');
-		} catch (err) {
-			console.log(err);
-			return Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Lo sentimos, Algo Salio mal con el registro',
-			});
-		}
-	};
 };

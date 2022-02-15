@@ -44,7 +44,7 @@ function AddForm({edit, id, refreshTable, onClose}) {
 	const [editCategory, setEditCategory] = useState()
 
 	useEffect(() => {
-		if (id !== -1) {
+		if (id) {
 			apiWithToken
 				.get('/operations/id/' + id)
 				.then((res) => {
@@ -288,7 +288,7 @@ function AddForm({edit, id, refreshTable, onClose}) {
 				) : (
 					<label>Type</label>
 				)}
-				<select name="type" value={input.type} onChange={handleInputChange}>
+				<select name="type" value={input.type} onChange={handleInputChange} disabled={edit}>
 					<option value="none"></option>
 					<option value="Income">Income</option>
 					<option value="Expense">Expense</option>
@@ -307,23 +307,23 @@ function AddForm({edit, id, refreshTable, onClose}) {
 						onChange={handleInputChange}
 						disabled={input.type === 'none'}
 					>
-						<option value="none"></option>
+						{!edit && <option value="none"></option>}
 						{categories.map((category) => (
 							<option key={category.id} value={category.id +( category.allowDelete ? 'T': 'F')}>
-								{editCategory ? category.name + ' (deleted)' : category.name}
+								{(editCategory && editCategory.deleted && category.id === editCategory.id) ? editCategory.name + ' (deleted)' : category.name}
 							</option>
 						))}
 					</select>
 					<button type="button" onClick={onOpenModal}>
 						<AddCircleIcon />
 					</button>
-					<button  className="deleteBtn" 
+					{!edit && <button  className="deleteBtn" 
 						type="button"
 						onClick={handleDeleteCategory}
 						disabled={input.category.charAt(input.category.length - 1) !== 'T'} 
 					>
 						<DeleteIcon/>
-					</button> 
+					</button> }
 				</div>
 			</div>
 			<div className="inputContainer">

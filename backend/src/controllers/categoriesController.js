@@ -72,7 +72,7 @@ const deleteCategory = async (req, res) => {
 		category.update({
 			deleted: true
 		});
-		return res.status(200).json({ message: 'Success' });
+		return res.status(200).json(category);
 	} catch (error) {
 		return res.status(500).json({ message: 'Internal server error' });
 	}

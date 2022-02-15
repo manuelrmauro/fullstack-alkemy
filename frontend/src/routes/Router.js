@@ -8,12 +8,11 @@ import Loading from '../pages/Loading/Loading';
 import LogOrSingIn from '../pages/LogOrSignIn/LogOrSignIn';
 import ShowData from '../pages/ShowData/ShowData';
 import { startCheking } from '../redux/actions/authActions';
-import PrivateRoute from './PrivateRoute';
 
 function Router() {
 
   const dispatch = useDispatch();
-  const { checking, id } = useSelector((state) => state.auth);
+  const { checking, id, email } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(startCheking());
@@ -25,13 +24,13 @@ function Router() {
 
 	return (
 		<BrowserRouter>
-		{!!id && <Nav/>}
+		{!!id && <Nav email={email}/>}
 		{!!id ? 
 		<Routes>
-			<Route path="/" element={<PrivateRoute isAuthenticated={!!id}><Home/></PrivateRoute>} />
-			<Route path="/incomes" element={<PrivateRoute isAuthenticated={!!id}><ShowData type='Incomes'/></PrivateRoute>} />
-			<Route path="/expenses" element={<PrivateRoute isAuthenticated={!!id}><ShowData type='Expenses'/></PrivateRoute>} />
-			<Route path="/add" element={<PrivateRoute isAuthenticated={!!id}><Add/></PrivateRoute>} />
+			<Route path="/" element={<Home/>} />
+			<Route path="/incomes" element={<ShowData type='Incomes'/>} />
+			<Route path="/expenses" element={<ShowData type='Expenses'/>} />
+			<Route path="/add" element={<Add/>} />
 			<Route path="*" element={<Navigate replace to='/'/>} />
 		</Routes> :
 		<Routes>

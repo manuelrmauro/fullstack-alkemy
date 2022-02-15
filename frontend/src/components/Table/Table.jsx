@@ -61,7 +61,7 @@ export default function EnhancedTable({ type, data ,refreshTable }) {
 				selected.forEach((id) => {
 					apiWithToken.delete(`/operations/${id}`);
 				});
-				window.location.reload();
+				refreshTable()
 			}
 		});
 	};

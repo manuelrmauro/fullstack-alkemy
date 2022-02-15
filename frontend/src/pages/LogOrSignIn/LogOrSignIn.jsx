@@ -3,13 +3,21 @@ import { useState } from 'react';
 import './LogOrSignIn.css';
 import validator from 'validator';
 import { useDispatch } from 'react-redux';
-import { startLogin, startRegister } from '../../redux/actions/authActions';
+import { startGoogleLogin, startLogin, startRegister } from '../../redux/actions/authActions';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import GoogleLogin from 'react-google-login'
 
 function LogOrSignIn({ isRegister }) {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+
+	const responseGoogleSucces = ({ tokenId }) => {
+    dispatch(startGoogleLogin(tokenId));
+  };
+  const responseGoogleFail = () => {
+    navigate('/register', { replace: true });
+  };
 
 	const [input, setInput] = useState({
 		email: '',
@@ -167,6 +175,7 @@ function LogOrSignIn({ isRegister }) {
 						disabled={disabled}
 					/>
 				</div>
+					</form>
 				<p>
 					{isRegister
 						? 'Do you already have an account? '
@@ -175,7 +184,14 @@ function LogOrSignIn({ isRegister }) {
 						{isRegister ? 'Log in' : 'Sign in'}
 					</span>
 				</p>
-			</form>
+				<GoogleLogin
+              clientId="327655390134-3dkok4tsgubva7v5gj7drncddv260lor.apps.googleusercontent.com"
+              buttonText="Continuar con Google"
+              onSuccess={responseGoogleSucces}
+              onFailure={responseGoogleFail}
+              cookiePolicy="single_host_origin"
+              className='googleBtn'
+            />
 		</div>
 	);
 }

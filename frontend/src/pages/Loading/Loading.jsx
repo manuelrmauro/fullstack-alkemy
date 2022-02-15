@@ -1,8 +1,12 @@
 import React from 'react'
+import loading from '../../assets/loading.gif'
+import './Loading.css'
 
 function Loading() {
   return (
-    <div>Loading</div>
+    <div className='loadingContainer'>
+      <img src={loading} alt='loading'/>
+    </div>
   )
 }
 
