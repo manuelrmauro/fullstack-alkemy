@@ -150,7 +150,6 @@ const uploadOperation = async (req, res) => {
 		if (category) operation.setCategory(category);
 		return res.status(200).json(operation);
 	} catch (error) {
-		console.log(error)
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 };
