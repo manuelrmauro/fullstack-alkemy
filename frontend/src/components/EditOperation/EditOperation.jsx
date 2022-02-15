@@ -1,12 +1,12 @@
 import React from 'react';
 import AddForm from '../AddForm/AddForm';
 
-function EditOperation({ id }) {
+function EditOperation({ id,refreshTable, onClose }) {
 	
 	return <form>
-    <div>
+    <div className='modalContainer'>
       <h2>Edit operation</h2>
-      <AddForm edit={true} id={id}/>
+      <AddForm edit={true} id={id} refreshTable={refreshTable} onClose={onClose}/>
     </div>
   </form>;
 }

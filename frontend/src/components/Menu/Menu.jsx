@@ -7,7 +7,6 @@ import { Link} from 'react-router-dom';
 import HomeIcon from '@mui/icons-material/Home';
 import ArchiveIcon from '@mui/icons-material/Archive';
 import UnarchiveIcon from '@mui/icons-material/Unarchive';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import './Menu.css';
 import { useDispatch } from 'react-redux';
@@ -54,12 +53,6 @@ export default function LongMenu() {
 			<MenuItem>
 				<UnarchiveIcon className="menuOptionIcon" />
 				<label>Expenses</label>
-			</MenuItem>
-		</Link>,
-		<Link to="/add" className="menuOption" onClick={handleClose}>
-			<MenuItem>
-				<AddCircleIcon className="menuOptionIcon menuOptionAddIcon" />
-				<label>Add</label>
 			</MenuItem>
 		</Link>,
 		<div

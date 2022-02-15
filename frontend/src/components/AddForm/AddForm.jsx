@@ -9,7 +9,7 @@ import { Modal } from 'react-responsive-modal';
 import 'react-responsive-modal/styles.css';
 import EditCategories from '../../components/EditCategories/EditCategories';
 
-function AddForm({edit, id}) {
+function AddForm({edit, id, refreshTable, onClose}) {
 
 
 	const [open, setOpen] = useState(false);
@@ -41,6 +41,8 @@ function AddForm({edit, id}) {
 		date: today,
 	});
 
+	const [editCategory, setEditCategory] = useState()
+
 	useEffect(() => {
 		if (id !== -1) {
 			apiWithToken
@@ -53,6 +55,7 @@ function AddForm({edit, id}) {
 						amount:res.data.amount,
 						date:res.data.date,
 					});
+					setEditCategory(res.data.category)
 				})
 		}
 	}, [id]);
@@ -88,17 +91,23 @@ function AddForm({edit, id}) {
 		setInput({ ...input, category: 'none' });
 		if (input.type === 'Income') {
 			apiWithToken.get('/categories?type=income').then((data) => {
+				if (editCategory) {
+					setCategories([...data.data, editCategory])
+				} else
 				setCategories(data.data);
 			});
 		} else if (input.type === 'Expense') {
 			apiWithToken.get('/categories?type=expense').then((data) => {
+				if (editCategory) {
+					setCategories([...data.data, editCategory])
+				} else
 				setCategories(data.data);
 			});
 		} else {
 			setCategories([]);
 		}
 		setRefresh(false);
-	}, [input.type, refresh]);
+	}, [input.type, refresh, editCategory]);
 
 	useEffect(() => {
 		let count = 0;
@@ -158,7 +167,7 @@ function AddForm({edit, id}) {
 		handleErrors({ [e.target.name]: e.target.value });
 	};
 
-	const handleOnSubmit = (e) => {
+	const handleCreate = (e) => {
 		e.preventDefault();
 		handleErrors(input);
 		apiWithToken
@@ -208,12 +217,42 @@ function AddForm({edit, id}) {
 		});
 	};
 
-	const handleEdit = (e) => {
-		e.preventDefault()
+
+
+	const handleEditOp = (e) => {
+		e.preventDefault();
+		handleErrors(input);
+		apiWithToken
+			.put('/operations/' + id, { ...input, category: input.category.slice(0,-1)})
+			.then(() => {
+				Swal.fire({
+					icon: 'success',
+					title: 'Success',
+					text: 'Operation edited',
+				}).then(() => {
+					refreshTable()
+					onClose()
+				});
+			})
+			.catch((err) => {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: err.response.data.message || 'Internal server error',
+				});
+			}); 
+	}
+
+	const handleOnSubmit = (e) => {
+		if (edit) {
+			handleEditOp(e)
+		} else {
+			handleCreate(e)
+		}
 	}
 
 	return (
-		<form onSubmit={edit ? handleEdit : handleOnSubmit} className="form">
+		<form className={edit ? '' : 'form'}>
 			<Modal open={open} onClose={onCloseModal} center>
 				<EditCategories onRefresh={onRefresh} />
 			</Modal>
@@ -271,7 +310,7 @@ function AddForm({edit, id}) {
 						<option value="none"></option>
 						{categories.map((category) => (
 							<option key={category.id} value={category.id +( category.allowDelete ? 'T': 'F')}>
-								{category.name}
+								{editCategory ? category.name + ' (deleted)' : category.name}
 							</option>
 						))}
 					</select>
@@ -300,9 +339,10 @@ function AddForm({edit, id}) {
 			<div className="inputContainer">
 				<input
 					type="submit"
-					value="ADD"
+					value={edit ? 'EDIT' : 'ADD'}
 					className="formSubmitBtn"
 					disabled={disabled}
+					onClick={handleOnSubmit}
 				/>
 			</div>
 		</form>

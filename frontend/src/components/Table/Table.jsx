@@ -1,4 +1,4 @@
-import  React,{useState} from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -19,20 +19,25 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import './Table.css';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { apiWithToken } from '../../services/api';
 import EditIcon from '@mui/icons-material/Edit';
 import { Modal } from 'react-responsive-modal';
 import EditOperation from '../EditOperation/EditOperation';
 import 'react-responsive-modal/styles.css';
 
-export default function EnhancedTable({ type, data }) {
+export default function EnhancedTable({ type, data ,refreshTable }) {
 	const [open, setOpen] = useState(false);
 
-	const [id, setId] = useState(-1)
-	const onOpenModal = (id) => {setOpen(true); setId(id)};
-	const onCloseModal = () => {setOpen(false); setId(-1)};
-
+	const [id, setId] = useState(-1);
+	const onOpenModal = (id) => {
+		setOpen(true);
+		setId(id);
+	};
+	const onCloseModal = () => {
+		setOpen(false);
+		setId(-1);
+	};
 
 	const [order, setOrder] = React.useState('asc');
 	const [orderBy, setOrderBy] = React.useState('calories');
@@ -53,30 +58,29 @@ export default function EnhancedTable({ type, data }) {
 			denyButtonText: 'No',
 		}).then((result) => {
 			if (result.isConfirmed) {
-				selected.forEach(id => {
-					apiWithToken.delete(`/operations/${id}`)
-				})
-				window.location.reload()
+				selected.forEach((id) => {
+					apiWithToken.delete(`/operations/${id}`);
+				});
+				window.location.reload();
 			}
-		})
-	}
+		});
+	};
 
-	React.useEffect(() => {
-	},[selected])
 	// others START
-	function createData( concept, category, amount, date, edit) {
+	function createData(id, concept, category, amount, date, edit) {
 		return {
+			id,
 			concept,
 			category,
 			amount,
 			date,
-			edit
+			edit,
 		};
 	}
 
-
 	const rows = data.map((data) =>
 		createData(
+			data.id,
 			data.concept,
 			data.category.name,
 			data.type === 'Income' ? (
@@ -85,8 +89,17 @@ export default function EnhancedTable({ type, data }) {
 				<b className="tableAmount tableExpense">{`-$${data.amount}`}</b>
 			),
 			data.date,
-			<button type='button' className='editBtn' name='edit' onClick={() => {onOpenModal(data.id)}}><EditIcon/></button>
-			)
+			<button
+				type="button"
+				className="editBtn"
+				name="edit"
+				onClick={() => {
+					onOpenModal(data.id);
+				}}
+			>
+				<EditIcon />
+			</button>
+		)
 	);
 
 	function descendingComparator(a, b, orderBy) {
@@ -164,16 +177,18 @@ export default function EnhancedTable({ type, data }) {
 			<TableHead>
 				<TableRow className="tableHead">
 					<TableCell padding="checkbox">
-						{type !== 'Last moves' && <Checkbox
-							className="tableHeadCheck"
-							color="primary"
-							indeterminate={numSelected > 0 && numSelected < rowCount}
-							checked={rowCount > 0 && numSelected === rowCount}
-							onChange={onSelectAllClick}
-							inputProps={{
-								'aria-label': 'select all',
-							}}
-						/>}
+						{type !== 'Last moves' && (
+							<Checkbox
+								className="tableHeadCheck"
+								color="primary"
+								indeterminate={numSelected > 0 && numSelected < rowCount}
+								checked={rowCount > 0 && numSelected === rowCount}
+								onChange={onSelectAllClick}
+								inputProps={{
+									'aria-label': 'select all',
+								}}
+							/>
+						)}
 					</TableCell>
 					{headCells.map((headCell) => (
 						<TableCell
@@ -219,8 +234,6 @@ export default function EnhancedTable({ type, data }) {
 
 	const EnhancedTableToolbar = (props) => {
 		const { numSelected } = props;
-
-
 
 		return (
 			<Toolbar
@@ -276,8 +289,9 @@ export default function EnhancedTable({ type, data }) {
 	};
 
 	const handleClick = (event, name) => {
-		const tag =event.target.tagName
-		if (tag === 'svg' || tag === 'path' || tag === 'BUTTON') return
+		console.log('aca')
+		const tag = event.target.tagName;
+		if (tag === 'svg' || tag === 'path' || tag === 'BUTTON') return;
 		const selectedIndex = selected.indexOf(name);
 		let newSelected = [];
 
@@ -314,8 +328,8 @@ export default function EnhancedTable({ type, data }) {
 
 	return (
 		<Box className="tableContainer">
-						<Modal open={open} onClose={onCloseModal} center>
-				<EditOperation id={id} />
+			<Modal open={open} onClose={onCloseModal}  center>
+				<EditOperation id={id} refreshTable={refreshTable} onClose={onCloseModal}/>
 			</Modal>
 			<Paper sx={{ width: '100%', mb: 2 }}>
 				<EnhancedTableToolbar numSelected={selected.length} type={type} />

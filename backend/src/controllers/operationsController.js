@@ -147,9 +147,10 @@ const uploadOperation = async (req, res) => {
 			return res.status(404).json({ message: 'Operation not found' });
 		}
 		await operation.update(data);
-		if (category_id) operation.setCategory(category);
+		if (category) operation.setCategory(category);
 		return res.status(200).json(operation);
 	} catch (error) {
+		console.log(error)
 		return res.status(500).json({ message: 'Internal server error' });
 	}
 };

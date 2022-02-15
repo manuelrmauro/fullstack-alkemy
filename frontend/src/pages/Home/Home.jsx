@@ -3,7 +3,7 @@ import { apiWithToken } from '../../services/api';
 import PieChart from '../../components/PieChart/PieChart.jsx';
 import Table from '../../components/Table/Table';
 import './Home.css';
-import Loading from '../Loading/Loading'
+import Loading from '../Loading/Loading';
 
 function Home() {
 	const [input, setInput] = useState('balance');
@@ -11,11 +11,18 @@ function Home() {
 	const [resume, setResume] = useState({});
 	const [balance, setBalance] = useState([]);
 
+	const [refreshTable, setRefreshTable] = useState(false);
+	const handleRefreshTable = () => {
+		setRefreshTable(true);
+	};
+
 	useEffect(() => {
 		apiWithToken.get('/operations/resume').then((data) => {
 			setResume(data.data);
 		});
-	}, []);
+		setRefreshTable(false);
+	}, [refreshTable]);
+
 
 	useEffect(() => {
 		if (resume.totalIncomes && resume.totalExpenses) {
@@ -46,7 +53,7 @@ function Home() {
 	return (
 		<div>
 			{Object.keys(resume).length === 0 ? (
-				<Loading/>
+				<Loading />
 			) : (
 				<div className="homeContainer section">
 					<div className="totalContainer">
@@ -88,7 +95,7 @@ function Home() {
 						)}
 					</div>
 					{resume.operations && resume.operations.length > 0 && (
-						<Table type="Last moves" data={resume.operations} />
+						<Table type="Last moves" data={resume.operations} refreshTable={handleRefreshTable} />
 					)}
 				</div>
 			)}

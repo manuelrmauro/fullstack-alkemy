@@ -11,6 +11,11 @@ function ShowData({ type }) {
 	const [finalCategories, setFinalCategories] = useState([]);
 	const [input, setInput] = useState('all');
 
+	const [refreshTable, setRefreshTable] = useState(false);
+	const handleRefreshTable = () => {
+		setRefreshTable(true);
+	};
+
 	useEffect(() => {
 		if (type === 'Incomes') {
 			apiWithToken
@@ -35,7 +40,8 @@ function ShowData({ type }) {
 				setCategories(data.data);
 			});
 		}
-	}, [type, input]);
+		setRefreshTable(false)
+	}, [type, input, refreshTable]);
 
 	useEffect(() => {
 		setFinalCategories(
@@ -68,7 +74,7 @@ function ShowData({ type }) {
 						</select>
 					</div>
 
-					<Table type={type} data={data} />
+					<Table type={type} data={data}  refreshTable={handleRefreshTable}/>
 				</div>
 			)}
 		</div>

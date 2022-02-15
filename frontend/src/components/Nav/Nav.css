@@ -10,3 +10,28 @@
   color:var(--color-white);
   text-decoration: none !important;
 }
+
+.addBtn {
+  position:fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: white;
+  border-radius: 50%;
+  color: var(--color-blue);
+}
+
+.addBtn:hover {
+  color: var(--color-blue-hover);
+}
+
+.addIcon {
+  font-size: 5rem !important;
+  text-decoration: none;
+}
+
+
+@media (max-width: 600px) {
+  .addIcon {
+    font-size: 4rem !important;
+  }
+}
