@@ -12,19 +12,26 @@ const getCategories = async (req, res) => {
 		if (type === 'income') {
 			categories = await Category.findAll({
 				order,
-				where: { [Op.and]: [{ type: 'Income' }, { [Op.or]: or }] },
+				where: {
+					[Op.and]: [{ type: 'Income' }, { [Op.or]: or }, { deleted: false }],
+				},
 			});
 		} else if (type === 'expense') {
 			categories = await Category.findAll({
 				order,
-				where: { [Op.and]: [{ type: 'Expense' }, { [Op.or]: or }] },
+				where: {
+					[Op.and]: [{ type: 'Expense' }, { [Op.or]: or }, { deleted: false }],
+				},
 			});
 		} else {
-			categories = await Category.findAll({ order, where: { [Op.or]: or } });
+			categories = await Category.findAll({
+				order,
+				where: { [Op.and]: [{ [Op.or]: or }, { deleted: false }] },
+			});
 		}
 		res.status(200).json(categories);
 	} catch (error) {
-		console.log(error)
+		console.log(error);
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
@@ -62,7 +69,9 @@ const deleteCategory = async (req, res) => {
 		if (!category) {
 			return res.status(400).json({ message: 'Category not found' });
 		}
-		category.destroy();
+		category.update({
+			deleted: true
+		});
 		return res.status(200).json({ message: 'Success' });
 	} catch (error) {
 		return res.status(500).json({ message: 'Internal server error' });

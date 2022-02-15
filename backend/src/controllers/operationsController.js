@@ -7,19 +7,23 @@ const order = [['id', 'desc']];
 const getOperations = async (req, res) => {
 	try {
 		const { userId } = req;
-		const { type } = req.query;
+		const { type, category } = req.query;
+		const whereOpAnd = [{ user_id: userId }];
 		let operations;
+		if (category && category !== 'all') whereOpAnd.push({ category_id: category });
 		if (type === 'income') {
+			whereOpAnd.push({ type: 'Income' });
 			operations = await Operation.findAll({
 				order,
 				include: { model: Category, as: 'category' },
-				where: { [Op.and]: [{ type: 'Income' }, { user_id: userId }] },
+				where: { [Op.and]: whereOpAnd },
 			});
 		} else if (type === 'expense') {
+			whereOpAnd.push({ type: 'Expense' });
 			operations = await Operation.findAll({
 				order,
 				include: { model: Category, as: 'category' },
-				where: { [Op.and]: [{ type: 'Expense' }, { user_id: userId }] },
+				where: { [Op.and]: whereOpAnd },
 			});
 		} else {
 			operations = await Operation.findAll({
@@ -34,6 +38,19 @@ const getOperations = async (req, res) => {
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
+
+const getOperationById = async(req, res) => {
+	try {
+		const { userId } = req;
+		const {id} =  req.params
+		const operation = await Operation.findByPk(id, {include: { model: Category, as: 'category' }})
+		if (!operation) return res.status(404).json({message: 'Operation not found'})
+		if (operation.user_id !== userId) return res.status(404).json({message: 'Operation not found'})
+		return res.status(200).json(operation)
+	} catch (error) {
+		return res.status(500).json({message: 'Internal server error'})
+	}
+}
 
 const getResume = async (req, res) => {
 	try {
@@ -56,8 +73,8 @@ const getResume = async (req, res) => {
 		let totalExpenses = 0;
 		let incomesCategories = [];
 		let expensesCategories = [];
-		console.log(incomes, expenses)
-	 	incomes.forEach((income) => {
+		console.log(incomes, expenses);
+		incomes.forEach((income) => {
 			totalIncomes += income.amount;
 			const category = incomesCategories.find(
 				(item) => item.category === income.category.name
@@ -84,8 +101,8 @@ const getResume = async (req, res) => {
 			} else {
 				category.area += expense.amount;
 			}
-		}); 
-		const total = (totalIncomes - totalExpenses) + 0;
+		});
+		const total = totalIncomes - totalExpenses + 0;
 		res.status(200).json({
 			total,
 			operations,
@@ -95,7 +112,6 @@ const getResume = async (req, res) => {
 			expensesCategories,
 		});
 	} catch (error) {
-		console.log(error);
 		res.status(500).json({ message: 'Internal server error' });
 	}
 };
@@ -131,7 +147,7 @@ const uploadOperation = async (req, res) => {
 			return res.status(404).json({ message: 'Operation not found' });
 		}
 		await operation.update(data);
-		if (category_id) operation.setCategory(category);
+		if (category) operation.setCategory(category);
 		return res.status(200).json(operation);
 	} catch (error) {
 		return res.status(500).json({ message: 'Internal server error' });
@@ -157,6 +173,7 @@ const deleteOperation = async (req, res) => {
 
 module.exports = {
 	getOperations,
+	getOperationById,
 	addOperation,
 	uploadOperation,
 	deleteOperation,

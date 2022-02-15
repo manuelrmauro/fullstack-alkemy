@@ -1,9 +1,42 @@
 @media (max-width: 600px) {
- .addForm {
-   grid-template-columns: 100%;
-   gap:1rem;
- } 
-
-
+	.addForm {
+		grid-template-columns: 100%;
+		gap: 1rem;
+	}
 }
 
+.categoryInputContainer {
+	width: 100%;
+	display: flex;
+	gap: 0.3rem;
+}
+
+.categoryInputContainer select {
+	width: 100%;
+}
+
+.categoryInputContainer button {
+	padding: 0;
+	background: none;
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	color: var(--color-blue);
+}
+
+.categoryInputContainer button:hover {
+	color: var(--color-blue-hover);
+}
+
+.deleteBtn {
+	color: var(--color-red) !important;
+}
+
+.deleteBtn:hover {
+	color: var(--color-red-hover) !important;
+}
+
+.deleteBtn:disabled {
+	color: var(--color-grey) !important;
+	cursor: auto;
+}

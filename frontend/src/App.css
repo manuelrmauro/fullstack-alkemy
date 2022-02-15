@@ -85,3 +85,17 @@ background-color:var(--color-blue-hover)
   color: var(--color-red);
   font-weight: bold;
 }
+
+
+.modalContainer {
+  width: 70vw;
+  text-align: center;
+  max-width: 20rem;
+  padding: 0.5rem;
+}
+
+@media (max-width: 300px) {
+	.modalContainer {
+		width: 60vw;
+	}
+}
