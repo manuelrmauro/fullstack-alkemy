@@ -23,6 +23,15 @@ class User extends Model {
           allowNull: false,
           defaultValue: 'direct',
         },
+        validated: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
+        mailCode: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
       },
       {
         sequelize,

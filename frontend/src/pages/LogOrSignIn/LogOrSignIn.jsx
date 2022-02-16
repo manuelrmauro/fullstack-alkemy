@@ -186,7 +186,7 @@ function LogOrSignIn({ isRegister }) {
 				</p>
 				<GoogleLogin
               clientId="327655390134-3dkok4tsgubva7v5gj7drncddv260lor.apps.googleusercontent.com"
-              buttonText="Continuar con Google"
+              buttonText="Continue with Google"
               onSuccess={responseGoogleSucces}
               onFailure={responseGoogleFail}
               cookiePolicy="single_host_origin"

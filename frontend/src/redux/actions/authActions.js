@@ -105,12 +105,15 @@ export const startLogout = () => {
 
 export const startRegister = async (input) => {
 	try {
-		console.log(input);
-		await api.post('/user', input);
+		await api.post('/user', input).then((res) => {
+			const { id } = res.data;
+			const { email } = input;
+			api.post('user/validate', { id, email });
+		})
 		return Swal.fire({
 			icon: 'success',
 			title: 'Success',
-			text: 'You can now log in with your new account',
+			text: 'We have sent you an email to confirm you account',
 		}).then(() => {
 			window.location.replace('/login');
 		});

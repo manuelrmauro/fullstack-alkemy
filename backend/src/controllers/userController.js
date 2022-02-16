@@ -59,7 +59,26 @@ const getUser = async (req, res) => {
 	}
 };
 
+const validate = async (req, res) => {
+  try {
+    const { id, usercode } = req.params;
+    const user = await User.findOne({
+      where: { [Op.and]: [{ id }, { mailCode: usercode }] },
+    });
+    if (!user.validated) {
+      await user.update({ validated: true });
+      await user.update({ mailCode: null });
+    } else {
+      return res.status(201).json({ message: 'Your account is already validated' });
+    }
+    return res.status(200).json({ message: 'Your account was validated' });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
+
 module.exports = {
 	createUser,
 	getUser,
+	validate
 };
