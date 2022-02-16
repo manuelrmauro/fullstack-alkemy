@@ -13,6 +13,6 @@ const ValidationsUser = require('../../middlewares/validations/validationUser');
 router.post('/', ValidationsUser.withPassword, createUser);
 router.get('/', authMiddleware, getUser);
 router.post('/validate/:id/:usercode', validate);
-router.post('/validate/', confirmarMail);
+router.post('/validate', confirmarMail);
 
 module.exports = router;

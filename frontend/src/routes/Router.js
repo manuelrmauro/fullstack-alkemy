@@ -7,6 +7,7 @@ import Home from '../pages/Home/Home';
 import Loading from '../pages/Loading/Loading';
 import LogOrSingIn from '../pages/LogOrSignIn/LogOrSignIn';
 import ShowData from '../pages/ShowData/ShowData';
+import ConfirmEmail from '../components/ConfirmEmail/ConfirmEmail'
 import { startCheking } from '../redux/actions/authActions';
 
 function Router() {
@@ -31,11 +32,13 @@ function Router() {
 			<Route path="/incomes" element={<ShowData type='Incomes'/>} />
 			<Route path="/expenses" element={<ShowData type='Expenses'/>} />
 			<Route path="/add" element={<Add/>} />
+			<Route path='/confirm/:id' element={<ConfirmEmail />}/>
 			<Route path="*" element={<Navigate replace to='/'/>} />
 		</Routes> :
 		<Routes>
 			<Route path="/" element={<LogOrSingIn isRegister={true}/>} />
 			<Route path="/login" element={<LogOrSingIn/>} />
+			<Route path='/confirm/:id' element={<ConfirmEmail />}/>
 			<Route path="*" element={<Navigate replace to='/'/>} />
 		</Routes>
 		}	

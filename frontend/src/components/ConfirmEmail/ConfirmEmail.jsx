@@ -11,11 +11,10 @@ function ConfirmEmail() {
 
 	const confirm = () => {
 		const emailCode = searchParams.get('emailcode');
-		console.log(emailCode);
-		console.log(params.id);
+
 		if (params.id > 0 && emailCode !== '') {
 			api
-				.post(`users/validate/${params.id}/${emailCode}`)
+				.post(`user/validate/${params.id}/${emailCode}`)
 				.then((res) => {
 					Swal.fire({
 						icon: 'success',

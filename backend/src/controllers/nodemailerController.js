@@ -41,7 +41,6 @@ const send = async (email, subject, text) => {
             subject,
             text,
           };
-
           const result = await transporter.sendMail(mailOptions);
           return result;
         } catch (error) {
@@ -66,7 +65,9 @@ const confirmarMail = async (req, res) => {
     if (!user) {
       return res.status(400).json({ message: 'Validate your account' });
     }
-    await user.update({ mailCode: uuidv4() });
+    const mailCode = uuidv4()
+    console.log(mailCode, 'MAILCODE')
+    await user.update({ mailCode });
     const subject = 'Confirm your email';
     const text = `Enter to te next link to confirm your email: ${FRONT_URL}/confirm/${id}?emailcode=${user.mailCode}`;
     const response = await send(email, subject, text);
